@@ -3,33 +3,35 @@
 **Same answers. Same alias.**  
 *A tiny, privacy-conscious, deterministic pseudonym generator that runs entirely in your browser and always produces an English adjective–noun pseudonym.*
 
-> **Status:** working prototype **v0.1**, algorithm **BM1**. **Working name:** BraveMonkey (not trademark-cleared).  
+> **Status:** working prototype **v0.2**, active algorithm **BM2**; BM1 remains available as a legacy API. **Working name:** BraveMonkey (not trademark-cleared).<br>
 > **Important:** BraveMonkey generates **pseudonymous labels**, **not secure login credentials**. Its numeric PIN is a **public checksum**; anybody can calculate it from the words. A platform must use a **separate authenticator** (such as a passkey) to protect accounts.  
-> **Approved next step:** externalize interface and questionnaire translations, maintain a curated English-only word catalog, add local SVG assets, and specify Unicode initials for a future protocol version. BM1 remains English-only and one-file; translating the interface never translates the generated words.
+> **Approved next step:** externalize interface and questionnaire translations. Credential words remain English in every UI language. BM2 loads its curated English-only word catalog at runtime and renders a colored SVG with `BM` initials.
 
 ## Read this first (2 minutes)
 
 Imagine answering a handful of memorable questions, then receiving:
 
 ```text
-Brave Monkey 2445      ← early concept; not a computed BM1 test vector
+BRAVE MONKEY 2445      ← early concept; not a computed BM1 or BM2 test vector
 ```
 
-BraveMonkey's actual **BM1** output is **`Adjective Noun 000000`** (six digits), together with an SVG icon. The current prototype displays English words. The same *canonical* answers always produce the same result, even on a different device running the **same version** of BraveMonkey.
+The active **BM2** output is an uppercase English pair, **`ADJECTIVE NOUN`**, with a six-digit public checksum and a colored `BM` initials SVG. The same canonical answers, BM2 implementation, and exact catalog contents/order produce the same result on every device. BM1 generation and its geometric identicon remain available for compatibility.
 
 The generator does **not** request an email address, create an account, call a backend to process answers, or save answers in a database. Everything runs in the browser. The output is intended as a memorable, reproducible **pseudonym** for another application, which remains responsible for user registration and real authentication.
 
-**What makes this unusual:** BraveMonkey has *no user registry*, no administrator account, and no secret cryptographic key. The current BM1 prototype is one static HTML file served via GitHub Pages. The approved refactor will remain a static, browser-only site, adding same-origin interface locale files, an English-only word catalog, and local SVG assets. An external platform can use the exact English word pair and matching assets to reconstruct the avatar without sending a request to BraveMonkey.
+**What makes this unusual:** BraveMonkey has *no user registry*, no administrator account, and no secret cryptographic key. The browser-only BM2 page fetches its English-only word catalog from the same site; it does not send questionnaire answers to a backend. An external platform can reproduce the checksum and initials avatar from the returned English pair and matching BM2 rules/catalog, without a request to BraveMonkey or the original answers.
 
 ### Get running now
 
-Current BM1 prototype files:
+Current prototype files:
 
 ```text
 bravemonkey/
-├── index.html       # Complete app: markup + CSS + JS + word lists
+├── index.html       # App, BM2 generator, and BM1 legacy compatibility functions
 ├── README.md        # This product and implementation specification
-└── .nojekyll        # Tell GitHub Pages to serve static files as-is
+├── .nojekyll        # Tell GitHub Pages to serve static files as-is
+└── assets/
+    └── words.json   # English-only word catalog loaded by BM2
 ```
 
 Approved target layout for interface localization and the avatar refactor:
@@ -51,9 +53,9 @@ bravemonkey/
 │       └── ...         # Other language-independent noun pictograms
 ```
 
-The target layout is a design decision, not a description of files already present in the BM1 prototype. Noun entries in `words.json` reference local pictogram assets. The word catalog contains English identifiers and labels only, regardless of interface language. The pruned catalog is a candidate for a future protocol version; it does not replace BM1's frozen dictionaries embedded in `index.html`.
+BM2 loads `assets/words.json` at runtime and uses its English-only IDs as credential labels. The current file contains 228 adjectives and 500 nouns. Noun records also reserve local icon paths for a possible future pictogram renderer; the current BM2 `BM` avatar does not fetch those SVGs. The original BM1 word arrays remain embedded in `index.html` for legacy generation and validation.
 
-There is no npm install, Composer, PHP, Laravel, Blade, database, application backend, or build step. The interface locale files, English-only word catalog, and SVG files are ordinary static assets; local development still uses a static file server.
+There is no npm install, Composer, PHP, Laravel, Blade, database, application backend, or build step. BM2 fetches the English-only catalog as an ordinary same-origin static asset; local development must use a static file server.
 
 1. Open the folder in your editor.
 2. Serve it locally with `python3 -m http.server 8000` (or `npx serve .`).
@@ -93,11 +95,11 @@ An external platform may register the alias as a *display label*, but it **must 
 
 ## Scope and requirements
 
-### Required (BM1 prototype)
+### Required BM1 legacy contract (retained for compatibility)
 
 - [x] **One `index.html`** containing the complete user interface and logic.
 - [x] **Bootstrap stable via CDN**, with a mobile-first responsive layout.
-- [x] **No backend, database, user accounts, admin credentials, or API calls** for generation.
+- [x] **No backend, database, user accounts, admin credentials, or answer-submission API.** BM2 fetches only the same-origin static word catalog.
 - [x] Browser-native **SHA-256** via `crypto.subtle.digest()`.
 - [x] A stable, repeatable questionnaire with constrained inputs.
 - [x] Curated dictionaries of **512 nouns** and **256 adjectives** (embedded in the HTML).
@@ -114,21 +116,21 @@ An external platform may register the alias as a *display label*, but it **must 
 - Collecting users' legal identities or claiming their results are legally anonymous.
 - An API that proves a specific person answered the questions: a purely static site cannot do this.
 
-## Approved interface localization and English-only word catalog (planned)
+## Current BM2 catalog and planned interface localization
 
-This section records the approved target. It does **not** change the current BM1 implementation or the exact BM1 data contract below.
+BM2 is the active page generator and loads its English-only word catalog dynamically. BM1 remains frozen and available through the legacy API; the BM2 catalog does not replace BM1's 256 × 512 index lists.
 
-### Interface translations
+### Interface translations (planned)
 
 - Store interface and questionnaire messages in `locales/en.json`, `locales/de.json`, and `locales/es.json`. Each file contains only that language's translations, with the same language-neutral message keys in all three files. These files contain UI text, not adjective or noun dictionaries.
 - Choose the initial interface language from the browser's preferred languages: support English, German, and Spanish, including regional tags, and fall back to English. Offer a language selector and do not persist its selection in cookies or local storage.
 - Translate all visible and assistive interface text, including question prompts, option labels, errors, status messages, page metadata, and SVG accessibility text. Set the document's `lang` attribute to the selected language.
-- Translate displayed option labels, but keep BM1's canonical option values and order unchanged. The selected UI language must not change BM1 canonical answers or the generated English word pair.
+- Translate displayed option labels, but keep the canonical option values and order unchanged. The selected UI language must not change answers, the English word pair, PIN, or avatar.
 - Fetch only static, same-origin locale files, the English-only word catalog, and local SVG assets. These requests must not contain questionnaire answers.
 
-### One English-only adjective-and-noun catalog
+### English-only adjective-and-noun catalog (active for BM2)
 
-Keep the adjective and noun catalog in one `assets/words.json` file, separate from the interface message files. Each `id` is the English word, stable identifier, and displayed credential label. Do not add German or Spanish word translations. For example:
+The page fetches the adjective and noun catalog from `assets/words.json`, separate from interface message files. Each `id` is the English word, stable identifier, and displayed credential label. Do not add German or Spanish word translations. Noun `icon` values are reserved for a future pictogram renderer; BM2 currently draws the `BM` initials avatar. For example:
 
 ```json
 {
@@ -144,26 +146,26 @@ Keep the adjective and noun catalog in one `assets/words.json` file, separate fr
 }
 ```
 
-`id` is the exact English canonical name and is unique within its list; it is both the label and the identifier. The generated adjective–noun pair remains English in every interface language, so no localized-word lookup, gender metadata, or adjective inflection is required. The interface locale is not part of the credential or PIN. The candidate list excludes common personal-name readings and adjective/noun overlaps from the adjective list, plus nouns with common standalone adjective senses; merely appearing in a noun compound does not qualify. This is a curation policy, not a claim that English words can never be used as names. The pruned catalog is for a future version, not an index-compatible copy of BM1: BM1 continues to use its frozen 256-adjective and 512-noun arrays in `index.html`. Do not substitute this catalog into BM1; adopting a changed list requires a new protocol version.
+`id` is the exact English canonical name and is unique within its list; it is both the label and the identifier. The generated adjective–noun pair remains English in every interface language, so no localized-word lookup, gender metadata, or adjective inflection is required. The interface locale is not part of the credential or PIN. The catalog excludes common personal-name readings and adjective/noun overlaps from the adjective list, plus nouns with common standalone adjective senses; merely appearing in a noun compound does not qualify. This is a curation policy, not a claim that English words can never be used as names. BM2 output depends on the exact word IDs, order, and contents. Do not edit or reorder the catalog under BM2; version any such change. BM1 continues to use its frozen embedded arrays.
 
 ### Unicode initials and protocol versioning
 
-BM1 continues to accept exactly the ASCII values in its data contract below. A future protocol version may accept Unicode initials encoded as UTF-8; “extended ASCII” is not a single character set and does not cover all European scripts.
+BM1 and BM2 accept the same ASCII questionnaire values described in the BM1 data contract below. A future protocol version may accept Unicode initials encoded as UTF-8; “extended ASCII” is not a single character set and does not cover all European scripts.
 
 For that future version, accept an initial—not a full name—and freeze the canonicalization with cross-platform test vectors: normalize to NFC, convert using locale-independent Unicode uppercase rules, and discard whitespace, punctuation, symbols, and control/format characters while retaining Unicode letters. Retain accents and letters from scripts such as Greek and Cyrillic; do not transliterate to A–Z. Combining marks that belong to a letter remain part of that letter. If uppercase conversion expands a character, use the resulting canonical string. Pin the Unicode/case-mapping behavior so implementations agree.
 
-Changing BM1's allowed initials or canonical serialization changes generated identities. Preserve BM1 generation and validation; version expanded Unicode input rather than silently changing BM1.
+Changing BM1 or BM2's allowed initials or canonical serialization changes generated identities. Preserve BM1 generation and validation; version expanded Unicode input rather than silently changing an existing protocol.
 
 ### Shared SVG assets, avatar colors, and external reconstruction
 
-- Use `/assets/icons/monkey.svg` as the shared BraveMonkey mascot in every language. It is language-independent artwork, not translated content.
-- Store language-independent noun pictograms as local SVG assets under `/assets/icons/`; each noun entry references its asset. Use a simple monochrome silhouette that the renderer can tint. Inline the selected pictogram geometry in a downloaded composite SVG so it remains usable without the repository's other files.
+- BM2 currently creates a compact rounded-square SVG with white `BM` initials on a deterministic colored background. The word pair selects one of six accessible background colors; the PIN does not affect the avatar.
+- Noun records already reserve language-independent icon paths under `/assets/icons/` for a possible later pictogram renderer. BM2 does not fetch or embed those SVGs. `/assets/icons/monkey.svg` remains the planned shared BraveMonkey mascot.
 - Treat leading-slash asset paths as repository-root paths and resolve them against the deployed site base. In particular, GitHub Pages project sites run below a repository subpath, so the app must not treat `/assets/...` as a domain-root URL.
-- A versioned deterministic avatar renderer maps the stable English adjective and noun identifiers to the noun pictogram and its colors. The monochrome shape can be tinted with a foreground color; the renderer chooses a background with sufficient contrast. The canonical renderer derives both colors deterministically from the word identifiers, not from the interface language, questionnaire answers, or PIN.
+- The BM2 avatar renderer derives its background deterministically from the English adjective–noun pair, not from the interface language, questionnaire answers, or PIN. White initials have at least 6.7:1 contrast against every background in the fixed palette.
 - The renderer may be tuned to use different foreground colors. If users can choose arbitrary colors, carry those choices as explicit avatar-style metadata; they cannot be reconstructed from the word pair alone. Style choices must not alter the canonical word pair or PIN.
 - Target at least **3:1 contrast** for meaningful icon graphics and **4.5:1** for normal-sized text, using WCAG AA as the baseline. The background-selection algorithm must check actual contrast and fall back to a passing color rather than assuming arbitrary color pairs are accessible.
-- An external platform needs the matching English word catalog, SVG assets, and avatar-renderer version to reconstruct or compare the expected image; the interface locale is not needed. It does not need questionnaire answers or the PIN to do so. This checks deterministic consistency only; it does not prove issuance, ownership, or authentication.
-- Color variation can make repeated noun pictograms more distinctive but cannot guarantee unique artwork for every word pair. The current BM1 identicon and its uniqueness claim remain unchanged; any replacement renderer must state its own guarantee and version.
+- An external platform needs the matching English word catalog and BM2 avatar-renderer version to reconstruct or compare the expected image; the interface locale and questionnaire answers are not needed. This checks deterministic consistency only; it does not prove issuance, ownership, or authentication.
+- The BM2 initials avatar is **not unique**: it always displays `BM`, with one of six backgrounds. The BM1 geometric identicon remains available through the legacy API and keeps its BM1 uniqueness guarantee.
 
 The PIN remains a public, recomputable checksum as specified below. It is not a secret and is not used to derive or validate the avatar.
 
@@ -175,10 +177,10 @@ The PIN remains a public, recomputable checksum as specified below. It is not a 
 2. **Stable facts:** day and month of birth, family name initial, birthplace initial, parents' initials (unknown permitted), sibling count.
 3. **Personal associations:** two preferred colors in order, whether the visitor ever had a pet, and first pet's initial if applicable.
 4. **Chosen anchors:** one personal symbol and an ordered pair of two different symbols.
-5. **Result:** English adjective–noun pair, six-digit checksum PIN, geometric SVG icon, copy button, SVG download. The interface around it may be localized.
+5. **Result:** uppercase English adjective–noun pair, six-digit checksum PIN, colored `BM` initials SVG, copy button, SVG download. The interface around it may be localized.
 6. **Check a PIN:** enter adjective + noun + PIN and recompute the checksum with no request to BraveMonkey.
 
-The questionnaire does **not** ask the visitor to type full names. BM1 initials are chosen from a controlled A–Z list; colors and symbols are enumerated to avoid spelling and capitalization disagreements. All labels should use plain, neutral, accessible language. The questions should remain precisely worded between versions. Planned translations change displayed wording only; BM1 canonical values remain fixed.
+The questionnaire does **not** ask the visitor to type full names. BM1/BM2 initials are chosen from a controlled A–Z list; colors and symbols are enumerated to avoid spelling and capitalization disagreements. All labels should use plain, neutral, accessible language. The questions should remain precisely worded between versions. Planned translations change displayed wording only; canonical values remain fixed.
 
 ## BM1 questionnaire: exact data contract
 
@@ -210,11 +212,51 @@ This table is the frozen BM1 contract. The planned Unicode-initial behavior appl
 
 Interpret “first pet” as **the first pet the person personally considered theirs**; not necessarily the current or favorite pet. If multiple interpretations are possible, reproducibility may suffer. Note also that color and symbol preferences may change with time.
 
-**Potential questions for a future version (requires version BM2):** oldest/middle/youngest/only-child status; whether the childhood home had a garden; first school initial; childhood landscape; writing hand; a chosen 4-digit memory number; a favorite childhood season; or additional ordered icon choices. Prefer durable, non-sensitive anchors. More questions **do not automatically imply security** and can make regeneration less reliable.
+**Potential questions for a future version (requires version BM3):** oldest/middle/youngest/only-child status; whether the childhood home had a garden; first school initial; childhood landscape; writing hand; a chosen 4-digit memory number; a favorite childhood season; or additional ordered icon choices. Prefer durable, non-sensitive anchors. More questions **do not automatically imply security** and can make regeneration less reliable.
 
-## BM1 algorithm: generation
+## Active BM2 algorithm: generation
 
-All code is in `index.html`; the following is the **normative description**. Cryptographic hashing is used for deterministic distribution, **not** for secrecy.
+The live page uses the following BM2 contract. It reuses the BM1 questionnaire fields, but the version tag, pruned word catalog, selection hashes, checksum namespace, and avatar differ. BM2 therefore produces different credentials from BM1. The catalog IDs and order in `assets/words.json` are protocol inputs.
+
+```js
+const canonical = JSON.stringify([
+  "BM2", birthdayDay, birthdayMonth, surnameInitial, cityInitial,
+  fatherInitial, motherInitial, siblings, color1, color2, hadPet,
+  petInitial, personalSymbol, icon1, icon2
+]);
+
+adjectiveIndex = unbiasedIndex(
+  "bravemonkey:identity:BM2:adjective:" + canonical,
+  adjectives.length
+);
+nounIndex = unbiasedIndex(
+  "bravemonkey:identity:BM2:noun:" + canonical,
+  nouns.length
+);
+adjective = adjectives[adjectiveIndex].id;
+noun = nouns[nounIndex].id;
+```
+
+`unbiasedIndex(seed, count)` hashes `seed` first and reads the first four digest bytes as an unsigned big-endian integer. It accepts values below `floor(2^32 / count) * count` and returns `value % count`; rejected values are retried using `seed + ":retry:" + attempt`, starting at attempt `1`. This avoids modulo bias for both catalog sizes. The live catalog currently has **228 adjectives and 500 nouns**.
+
+The BM2 PIN uses the same six-digit public-checksum shape in a distinct namespace:
+
+```text
+message = UTF8("bravemonkey:pin:BM2:" + lowercase(trim(adjective)) + ":" + lowercase(trim(noun)))
+PIN = pad6(UINT32_BE(SHA256(message)[0..3]) mod 1,000,000)
+```
+
+The BM2 avatar hashes `bravemonkey:avatar:BM2:<lowercase adjective>:<lowercase noun>`, selects a background from the fixed six-color palette using the first digest byte modulo six, and draws white `BM` initials. Palette order: `#155e75`, `#166534`, `#1d4ed8`, `#6b21a8`, `#9f1239`, `#9a3412`; the initials are white on a rounded `260 × 260` SVG background. The username is displayed and copied in uppercase; IDs and PIN calculation use the English catalog values.
+
+**Reference test vector (BM2):** For the canonical answers below, BM2 selects `Skyblue Key` (`adjectiveIndex = 141`, `nounIndex = 400`) and produces PIN **`229699`**. The displayed username is **`SKYBLUE KEY`**. The avatar palette index is `4` (`#9f1239`).
+
+```json
+["BM2","07","05","P","B","A","K","1","BLUE","GREEN","YES","M","MOON","SUN","STAR"]
+```
+
+## BM1 legacy algorithm: generation
+
+BM1 remains available through `window.BraveMonkey.legacyBM1`. The following is its **normative legacy description**. Cryptographic hashing is used for deterministic distribution, **not** for secrecy.
 
 ```js
 const canonical = JSON.stringify([
@@ -312,11 +354,13 @@ Because everyone can derive the PIN from `Adjective Noun`, the PIN contributes *
 
 Not 131 billion. Increasing the number of checksum digits does **not** improve uniqueness or authentication security if the digits remain a function of the pair.
 
+The table above uses BM1's 131,072 pairs. The active BM2 catalog has `228 × 500 = 114,000` English word pairs; the same formula gives approximate collision probabilities of 4.2% (100 users), 66.5% (500), 98.7% (1,000), and essentially 100% (10,000). The six-color BM avatar does not increase the number of distinct credentials.
+
 If the project eventually needs **truly distinct accounts** or **strong authentication**, it must change the architecture. Good options: keep BraveMonkey as the display alias, assign a random internal account ID at the destination platform, and authenticate with a passkey; or introduce an independent high-entropy secret (not just a public checksum). A static client cannot securely hide a signing key.
 
 ## BM1 unique deterministic SVG identicon
 
-Every BM1 word pair maps to a colorful **7 × 7 mirrored geometric identicon**, produced as an **inline SVG string** and downloadable as an `.svg` file. The icon is based exclusively on the adjective + noun and version, so it is reproducible without the questions or PIN. This section documents the current BM1 renderer; the planned noun-pictogram renderer is a separate, versioned presentation design.
+Every BM1 word pair maps to a colorful **7 × 7 mirrored geometric identicon**, produced as an **inline SVG string** and downloadable as an `.svg` file. The icon is based exclusively on the adjective + noun and version, so it is reproducible without the questions or PIN. This section documents the legacy BM1 renderer, still available through the legacy API; the active BM2 page instead uses the `BM` initials avatar specified above.
 
 To make **the actual geometric pattern unique for all 131,072 BM1 word pairs**, not merely “probably unique” from a short hash:
 
@@ -353,12 +397,12 @@ The **true** rate may be higher because inputs are not independent or uniform, a
 - Pseudonymous data may still be **personal data** under applicable privacy laws.
 - The public PIN proves **only mathematical consistency**, never issuance, human identity, or account ownership.
 
-Never use BM1 results alone to sign in to a sensitive application. Do not market the project as verified anonymity or strong authentication.
+Never use BM1 or BM2 results alone to sign in to a sensitive application. Do not market the project as verified anonymity or strong authentication.
 
 ## Deploy to GitHub Pages
 
 1. Create a GitHub repository named e.g. `bravemonkey` under **your own** GitHub account or organization. (The brand name and exact GitHub username need not match.)
-2. For the current prototype, upload/commit `index.html`, `README.md`, and `.nojekyll` in the repository root. When the approved refactor is implemented, also commit the complete `locales/` and `assets/` directories, including every referenced SVG.
+2. Upload/commit `index.html`, `README.md`, `.nojekyll`, and `assets/words.json`. Add `locales/` when interface translations are implemented; noun SVG files are only needed if a future renderer uses the reserved icon paths.
 3. In the repository, navigate to **Settings → Pages**.
 4. Under **Build and deployment**, choose **Deploy from a branch**, select **`main`** and **`/(root)`**, then **Save**.
 5. Visit `https://YOUR-USERNAME.github.io/bravemonkey/` when publishing is complete.
@@ -369,8 +413,8 @@ The hosting service serves static assets only; it cannot run Laravel, PHP, or a 
 ```bash
 # A possible starting point, after creating your empty GitHub repository:
 git init
-git add index.html README.md .nojekyll locales assets
-git commit -m "Initial BraveMonkey BM1 prototype"
+git add index.html README.md .nojekyll assets
+git commit -m "Initial BraveMonkey BM2 prototype"
 git branch -M main
 git remote add origin https://github.com/YOUR-USERNAME/bravemonkey.git
 git push -u origin main
@@ -382,17 +426,17 @@ git push -u origin main
 
 ### Change the look safely
 
-Modify the **HTML markup and CSS** for branding or responsiveness without changing BM1 outputs. The site uses Bootstrap's `.container`, `.row`, `.col-*`, forms, spacing, and buttons, with additional inline brand CSS. Once interface catalogs are implemented, translate UI and questionnaire copy in the appropriate locale file; keep the same message keys in every language file. Credential words remain English.
+Modify the **HTML markup and CSS** for branding or responsiveness without changing BM2 outputs. The site uses Bootstrap's `.container`, `.row`, `.col-*`, forms, spacing, and buttons, with additional inline brand CSS. When interface catalogs are implemented, translate UI and questionnaire copy in the appropriate locale file; keep the same message keys in every language file. Credential words remain English.
 
 ### Change English words and artwork safely
 
-`assets/words.json` is an English-only candidate catalog: each `id` is the displayed English word as well as its stable identifier. It is separate from the UI message catalogs. The current BM1 generator still uses the original embedded arrays; the pruned catalog must not replace them or be used to validate BM1 indices. Any generator adopting a changed word list must be versioned separately.
+`assets/words.json` is the active BM2 catalog: each `id` is the displayed English word as well as its stable identifier. BM2 loads it at runtime; preserve exact contents and order because changing either changes credentials. The BM1 arrays remain embedded for legacy generation and validation. Do not use the pruned BM2 catalog to validate BM1 indices.
 
-Noun records reference local, language-independent SVG pictograms under `/assets/icons/`. Keep the shared mascot at `/assets/icons/monkey.svg`. Do not make an external platform depend on an unversioned color choice or remote image URL; publish the avatar derivation and exact asset set needed to reproduce it.
+Noun records reserve local, language-independent SVG paths under `/assets/icons/`, but the current BM2 avatar does not use them. The BM2 initials and color palette are derived deterministically from the English pair; document and version any renderer change.
 
 ### Change the generator safely
 
-**Do not change BM1 in place.** These are protocol inputs, not merely presentation details:
+**Do not change BM1 or BM2 in place.** These are protocol inputs, not merely presentation details:
 
 - `VERSION`, canonical field order or encoding, fixed option IDs, word list order and contents.
 - Hash-prefix strings and byte order.
@@ -400,12 +444,13 @@ Noun records reference local, language-independent SVG pictograms under `/assets
 - PIN digit length and formula.
 - SVG pair index, permutation, and encoding.
 
-Version incompatible changes as **BM2** and preserve BM1 generation/validation for returning users and downstream platforms.
+Version incompatible changes to BM2 as **BM3**. Preserve BM1 generation/validation and the BM2 catalog, derivation, PIN, and avatar for returning users and downstream platforms.
 
 ### Quick manual test plan
 
-- [ ] Generate twice from identical answers ⇒ same adjective, noun, PIN, SVG string.
-- [ ] Test in a second browser/device ⇒ identical result for BM1.
+- [ ] Generate twice from identical answers and catalog ⇒ same uppercase pair, PIN, and SVG string.
+- [ ] Test in a second browser/device ⇒ identical result for BM2.
+- [ ] Confirm BM2 reference vector: `SKYBLUE KEY 229699`; confirm the `legacyBM1` vector remains `Angelic Whale 738045`.
 - [ ] Change a color or symbol ⇒ result should usually change (but collisions are possible).
 - [ ] Ensure `NO` pet always maps to `petInitial = "NONE"`.
 - [ ] Ensure `YES` pet requires initial or `UNKNOWN`.
@@ -414,25 +459,26 @@ Version incompatible changes as **BM2** and preserve BM1 generation/validation f
 - [ ] Verify PIN with the on-page checker; an edited digit should fail (except if changed back to the correct one).
 - [ ] Confirm SVG download opens as a standalone file and shows the correct alias.
 - [ ] After interface localization is implemented, verify browser-language detection, English fallback, manual language selection, translated accessibility text, and `document.documentElement.lang`.
-- [ ] Verify that changing UI language changes interface text only: the credential words stay English and BM1 canonical answers, indices, PIN, and identicon remain unchanged.
-- [ ] Verify that the English-only catalog has unique IDs, no `de`/`es` word labels, and is never mistaken for BM1's frozen index lists.
+- [ ] Verify that changing UI language changes interface text only: the credential words stay English and BM2 canonical answers, indices, PIN, and avatar remain unchanged.
+- [ ] Verify the same-origin catalog loads dynamically, has unique and disjoint English IDs, and has no localized word labels.
 - [ ] For the future Unicode protocol, test NFC normalization, locale-independent uppercase conversion, symbol/punctuation removal, accented letters, Greek/Cyrillic initials, and uppercase expansions with fixed cross-platform vectors.
-- [ ] For the noun-avatar renderer, verify the same English ID pair produces the same pictogram and colors in every locale and on an external implementation.
-- [ ] Check foreground/background contrast (at least 3:1 for meaningful icon graphics and 4.5:1 for normal text) and confirm downloaded SVGs include their pictogram geometry.
+- [ ] Verify the BM2 avatar shows white `BM` initials on the pair-derived palette color, with at least 4.5:1 text contrast and a readable SVG title/description.
 - [ ] Check mobile layout, keyboard-only navigation, screen reader labels, reduced-motion preference.
 - [ ] Validate on HTTPS and localhost, including any special browser privacy settings.
 - [ ] Confirm no answers are present in network payloads, localStorage, cookies, or query strings.
-- [ ] Add **fixed test vectors** to tests/CI before any BM2 refactor.
+- [ ] Keep fixed BM1 and BM2 test vectors in tests/CI before any protocol change.
 
-The browser console exposes `window.BraveMonkey` with `deriveCredential`, `pinFromWords`, `verifyPin`, `identiconSvg`, `canonicalAnswers`, and the dictionary sizes for development and future cross-language conformance tests.
+The browser console exposes BM2 through `window.BraveMonkey` (`deriveCredential`, `pinFromWords`, `verifyPin`, `avatarSvg`, `canonicalAnswers`, `dictionarySizes`, and `ready`). Frozen BM1 functions remain available as `window.BraveMonkey.legacyBM1`.
 
 ## Roadmap
 
-**BM1 — Current prototype:** one-file Bootstrap questionnaire, SHA-256 alias generation, public six-digit checksum, unique per-pair identicon, local checker, copy and SVG export.
+**BM1 — Legacy protocol:** original 256 × 512 dictionaries, SHA-256 alias generation, public six-digit checksum, unique per-pair geometric identicon, and compatibility API retained for returning users.
 
-**BM1.x — Compatible polish:** accessibility audit, improve inclusive wording, review a future English-only word catalog for name and part-of-speech ambiguity, add cross-browser fixed test vectors, externalize English/German/Spanish interface translations without changing BM1 canonical values, add the shared `/assets/icons/monkey.svg` mascot, and check name/domain/trademark status.
+**BM2 — Current prototype:** dynamic English-only 228 × 500 word catalog, uppercase username, public six-digit checksum, deterministic colored `BM` initials SVG, local checker, copy and download. BM1 remains available separately.
 
-**BM2 — Expanded input and curated English-only words:** specify Unicode initials and their canonicalization with fixed vectors; version any curated word-list changes; add local noun pictograms and a deterministic, contrast-checked avatar renderer. Generated adjective–noun pairs remain English regardless of UI language. Preserve BM1 generation, validation, dictionary order, PIN semantics, and BM1 identicons for returning users. The PIN remains a public checksum and does not participate in avatar reconstruction.
+**BM2.x — Interface localization:** add English/German/Spanish UI and questionnaire translations without translating credential words or changing BM2 outputs.
+
+**BM3 — Future protocol:** consider Unicode initials or word-list changes with new fixed vectors; any such change must preserve BM1 and BM2 compatibility. The PIN remains a public checksum, not an authenticator.
 
 **Authentication and ownership (separate platform concern):** keep pseudonyms as display labels, provide a privacy-preserving *real* authentication method on the destination platform (e.g. WebAuthn passkeys) and random internal account IDs; decide whether the questionnaire should be optional or replaced by user-held recovery material.
 
@@ -440,27 +486,27 @@ The browser console exposes `window.BraveMonkey` with `deriveCredential`, `pinFr
 
 ## Design decisions / trade-offs recorded
 
-1. **Static GitHub Pages over Laravel/Blade** for BM1: easier publishing, no server administration, browser-local answers. Laravel remains relevant to the receiving platform or any later secure server-based credential system.
+1. **Static GitHub Pages over Laravel/Blade** for BM1/BM2: easier publishing, no server administration, browser-local answers. Laravel remains relevant to the receiving platform or any later secure server-based credential system.
 2. **Pinned stable Bootstrap CDN** over a build framework: no build step, fast start, reliable CSS version, fewer moving parts; CDN still receives normal network traffic.
 3. **Fixed-format questions** over arbitrary typed names: less ambiguity, less accidental personal-data collection, easier deterministic encoding.
 4. **Six-digit public checksum** rather than a four-digit “password”: gives a recognizable consistency check but explicitly **no security gain**. A shorter or longer public checksum can be introduced only in a new protocol version.
-5. **256 adjectives + 512 nouns**: reasonable for a playful prototype; fundamentally insufficient as a guaranteed unique-account namespace at scale, with PIN adding no capacity.
-6. **Unique geometry for each pair**: use a reversible mapping of the pair index in 17 bits rather than hoping hash art will not collide.
+5. **Finite word-pair capacity**: BM1 has 256 × 512 pairs; BM2 currently has 228 × 500. Neither capacity guarantees unique accounts, and the PIN adds no capacity.
+6. **Version-specific avatars**: BM1 has unique geometric identicons; BM2 uses a simple pair-colored `BM` monogram that is not unique.
 7. **Clear versioning**: reproducibility is a long-term user promise. Stability takes precedence over changing dictionaries casually.
 8. **Separate translation layers:** locale JSON files translate only interface and questionnaire text; the word catalog contains English-only IDs and labels; noun SVG assets are shared across interface languages.
-9. **Unicode, not extended ASCII:** future initials retain Unicode letters, including accented and non-Latin letters, while discarding punctuation and symbols. BM1's ASCII contract remains frozen.
-10. **Pair-derived avatar styling:** the stable adjective/noun identifiers determine the pictogram and reproducible colors; the PIN remains independent and public. Contrast is checked rather than assumed.
+9. **Unicode, not extended ASCII:** future initials retain Unicode letters, including accented and non-Latin letters, while discarding punctuation and symbols. BM1 and BM2 keep the ASCII contract.
+10. **Pair-derived BM2 monogram styling:** the stable English word pair determines a reproducible background color; the `BM` foreground and public PIN are independent.
 
 ## References
 
-- [Bootstrap stable CDN and SRI](https://getbootstrap.com/docs/5.3/getting-started/download/) — pinned at 5.3.8 for BM1.
-- [Bootstrap 6 alpha announcement](https://blog.getbootstrap.com/2026/10/08/bootstrap-6-alpha/) — why BM1 is not using an alpha release.
+- [Bootstrap stable CDN and SRI](https://getbootstrap.com/docs/5.3/getting-started/download/) — pinned at 5.3.8 for the prototype.
+- [Bootstrap 6 alpha announcement](https://blog.getbootstrap.com/2026/10/08/bootstrap-6-alpha/) — why the prototype is not using an alpha release.
 - [GitHub Pages: creating a site](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site).
 - [GitHub Pages: publishing from a branch](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 - [MDN: SubtleCrypto.digest()](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest) — secure context and SHA-256 browser API.
 
 ---
 
-**Current BM1 summary:** **BraveMonkey is a one-file, browser-only pseudonym generator, intended for open-source publication. Same canonical answers → same English word pair, public checksum PIN, and SVG identicon; the receiving platform must independently provide secure login.**
+**Current BM2 summary:** **BraveMonkey is a static, browser-only pseudonym generator. Same canonical answers and word catalog → same uppercase English word pair, public checksum PIN, and colored `BM` initials SVG. BM1 generation remains available for compatibility; the receiving platform must provide separate secure login.**
 
-**Approved direction:** **Add English, German, and Spanish interface and questionnaire translations while keeping credential words English-only; maintain a separately versioned curated word catalog, the shared `/assets/icons/monkey.svg` mascot, local noun pictograms, and a reproducible contrast-checked avatar renderer—without changing BM1 or making the PIN secret.**
+**Approved direction:** **Add English, German, and Spanish interface and questionnaire translations while keeping credential words English-only; preserve BM1 and BM2 outputs and never treat the PIN as a secret or authenticator.**
