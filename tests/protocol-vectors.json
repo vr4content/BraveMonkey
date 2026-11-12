@@ -1,0 +1,82 @@
+{
+  "identityProtocolVersion": "identity-v1",
+  "avatarRendererVersion": "initials-avatar-v1",
+  "pinCases": [
+    {
+      "adjective": "Uplifted",
+      "noun": "Jewel",
+      "pin": "179752"
+    },
+    {
+      "adjective": " UPLIFTED ",
+      "noun": "jewel",
+      "pin": "179752"
+    }
+  ],
+  "validationCases": [
+    {
+      "adjective": "Uplifted",
+      "noun": "Jewel",
+      "pin": "179752",
+      "expected": true
+    },
+    {
+      "adjective": "Uplifted",
+      "noun": "Jewel",
+      "pin": "179753",
+      "expected": false
+    },
+    {
+      "adjective": "Brave",
+      "noun": "NotInCatalog",
+      "pin": "000000",
+      "expected": false
+    },
+    {
+      "adjective": "Uplifted",
+      "noun": "Jewel",
+      "pin": "17975x",
+      "expected": false
+    },
+    {
+      "adjective": "Uplifted",
+      "noun": "Jewel",
+      "pin": "179752\n",
+      "expected": false
+    },
+    {
+      "adjective": " uplifted ",
+      "noun": " JEWEL ",
+      "pin": "179752",
+      "expected": true
+    }
+  ],
+  "avatarCases": [
+    {
+      "adjective": "Green",
+      "noun": "Tomato",
+      "digestBytes": [51, 70, 239],
+      "themeIndex": 3,
+      "patternIndex": 2,
+      "rotationDegrees": 270,
+      "background": "#EFE7FB",
+      "patternProbe": "<circle cx=\"0\" cy=\"0\" r=\"24\"/>",
+      "options": {
+        "lang": "de-AT",
+        "title": "Green & <Tomato> 'test' \"title\"",
+        "description": "A \"bright\" demo & SVG <safe>."
+      }
+    },
+    {
+      "adjective": "Brave",
+      "noun": "Monkey",
+      "digestBytes": [139, 239, 129],
+      "themeIndex": 1,
+      "patternIndex": 3,
+      "rotationDegrees": 90,
+      "background": "#E4F3E8",
+      "patternProbe": "<path d=\"M-20 16Q0 2 0 16T40 16",
+      "options": {}
+    }
+  ]
+}

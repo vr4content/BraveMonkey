@@ -1,19 +1,11 @@
 import { load as parseYaml } from "./vendor/js-yaml.esm.min.js";
 import { vCardForCredential } from "./vcard.js";
 
-const VERSION = "BM3";
-const AVATAR_RENDERER_VERSION = "BM3-avatar-v2";
+const identityLibrary = window.BraveMonkeyIdentity;
+if (!identityLibrary) throw new Error("The Brave Monkey identity library did not load");
+const IDENTITY_PROTOCOL_VERSION = identityLibrary.identityProtocolVersion;
+const AVATAR_RENDERER_VERSION = identityLibrary.avatarRendererVersion;
 const SUPPORTED_LOCALES = Object.freeze(["en", "de", "es"]);
-const AVATAR_BADGE_COLOR = "#FFFCF6";
-const AVATAR_MIN_CONTRAST_RATIO = 7;
-const AVATAR_THEMES = Object.freeze([
-  Object.freeze({ background: "#FCE4E8", pattern: "#D7A2AC", ink: "#672E3B" }),
-  Object.freeze({ background: "#E4F3E8", pattern: "#A8CDB2", ink: "#28533D" }),
-  Object.freeze({ background: "#E3F0FC", pattern: "#A6C8E8", ink: "#24466A" }),
-  Object.freeze({ background: "#EFE7FB", pattern: "#C0AEE0", ink: "#503675" }),
-  Object.freeze({ background: "#FFF0DD", pattern: "#E6BE8C", ink: "#69451D" }),
-  Object.freeze({ background: "#DFF3F1", pattern: "#9FCFC9", ink: "#20534F" })
-]);
 const LETTER_RE = /^\p{L}$/u;
 const MARK_RE = /^\p{M}$/u;
 const graphemeSegmenter = typeof Intl.Segmenter === "function"
@@ -35,17 +27,17 @@ const FALLBACK_TEXT = Object.freeze({
   action_copied: "Copied to clipboard.",
   action_clipboard_error: "Clipboard unavailable. Select and copy the displayed alias and PIN manually.",
   validator_checking: "Checking…",
-  validator_matches: "✓ Matches the BM3 public checksum. This does not authenticate a person.",
-  validator_no_match: "✕ PIN does not match this BM3 word pair, or a word is not in the dictionary.",
+  validator_matches: "✓ This PIN matches the word pair.",
+  validator_no_match: "✕ PIN does not match this word pair, or a word is not in the dictionary.",
   validator_input_error: "Enter an adjective, a noun, and a six-digit PIN.",
   validator_failure: "Couldn't check the PIN. Use a secure HTTPS or localhost context.",
   catalog_error: "Couldn't load the English word catalog. Serve this site from localhost or HTTPS, then reload.",
-  contact_card_edition: "BM3 identity card",
-  contact_card_pin_notice: "Public checksum — not a password.",
-  contact_card_qr_aria: "QR code link to download the Brave Monkey contact",
-  contact_card_scan: "Scan to download contact",
-  contact_card_privacy: "The QR link carries only your alias, PIN, and interface language in its URL fragment, which is not sent in the page request. It contains no answers, email, or phone number. The link requires this site to be online.",
-  contact_card_ready: "Contact link is ready. Scan it to open the page and download your contact file.",
+  contact_card_qr_aria: "Direct vCard QR code for the alias",
+  contact_card_scan: "Scan with your phone",
+  contact_card_scan_help: "Open your camera, point it at the QR code, then tap the contact prompt.",
+  contact_card_scan_caption: "Scan to add contact",
+  contact_card_privacy: "The contact includes your alias, vr4content, website, and PIN. Questionnaire answers, email, and phone numbers are not included. Your phone may sync saved contacts to a cloud account.",
+  contact_card_ready: "Your contact QR is ready. Scan it with your phone to add the contact.",
   contact_card_png_working: "Preparing your card image…",
   contact_card_png_done: "PNG identity card downloaded.",
   contact_card_png_error: "Could not create the PNG card. Try again or use Print.",
@@ -192,8 +184,11 @@ function validateWordCatalog(catalog) {
 
   const wordAdjectives = readWords(catalog.adjectives, "adjective");
   const wordNouns = readWords(catalog.nouns, "noun");
-  if (wordAdjectives.length !== 228 || wordNouns.length !== 500) {
-    throw new Error("BM3 word list sizes changed; version the catalog before changing it");
+  if (
+    wordAdjectives.length !== identityLibrary.dictionarySizes.adjectives ||
+    wordNouns.length !== identityLibrary.dictionarySizes.nouns
+  ) {
+    throw new Error("Word catalog sizes do not match the bundled identity library");
   }
   const nounSet = new Set(wordNouns.map(word => word.toLowerCase()));
   if (wordAdjectives.some(word => nounSet.has(word.toLowerCase()))) {
@@ -240,18 +235,29 @@ function setFormError(key) {
   el("formError").hidden = false;
 }
 
-function setOption(select, value, label) {
-  const option = document.createElement("option");
-  option.value = value;
-  option.textContent = label;
-  select.appendChild(option);
-}
-
 function populateDayOptions() {
-  const select = el("birthdayDay");
+  const grid = el("birthdayDayGrid");
   for (let day = 1; day <= 31; day++) {
     const value = String(day).padStart(2, "0");
-    setOption(select, value, String(day));
+    const cell = document.createElement("div");
+    cell.className = "day-picker-cell";
+
+    const radio = document.createElement("input");
+    radio.className = "day-picker-radio";
+    radio.type = "radio";
+    radio.name = "birthdayDay";
+    radio.id = `birthdayDay${value}`;
+    radio.value = value;
+    radio.required = true;
+    radio.setAttribute("aria-describedby", "birthdayDayError");
+
+    const label = document.createElement("label");
+    label.className = "day-picker-label";
+    label.htmlFor = radio.id;
+    label.textContent = String(day);
+
+    cell.append(radio, label);
+    grid.appendChild(cell);
   }
 }
 
@@ -271,7 +277,7 @@ async function loadWordCatalog() {
     catalogState = "ready";
   } catch (error) {
     catalogState = "error";
-    console.error("Brave Monkey BM3 catalog error", error);
+    console.error("Brave Monkey word catalog error", error);
   }
   updateCatalogStatus();
   updateActionAvailability();
@@ -344,7 +350,7 @@ function preventExcessPrefixInput(event) {
 
 function canonicalAnswers(answers) {
   return JSON.stringify([
-    VERSION,
+    IDENTITY_PROTOCOL_VERSION,
     answers.birthdayDay,
     answers.familyPrefix,
     answers.fatherPrefix,
@@ -364,42 +370,9 @@ function readU32(bytes, start = 0) {
   return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(start, false);
 }
 
-function normalizeWord(word) {
-  return String(word).trim().toLowerCase();
-}
-
-function relativeLuminance(color) {
-  const channels = [1, 3, 5].map(offset => {
-    const channel = parseInt(color.slice(offset, offset + 2), 16) / 255;
-    return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
-  });
-  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
-}
-
-function contrastRatio(firstColor, secondColor) {
-  const firstLuminance = relativeLuminance(firstColor);
-  const secondLuminance = relativeLuminance(secondColor);
-  const lighter = Math.max(firstLuminance, secondLuminance);
-  const darker = Math.min(firstLuminance, secondLuminance);
-  return (lighter + 0.05) / (darker + 0.05);
-}
-
-function assertAvatarThemeContrast() {
-  for (const theme of AVATAR_THEMES) {
-    if (
-      contrastRatio(theme.ink, theme.background) < AVATAR_MIN_CONTRAST_RATIO ||
-      contrastRatio(theme.ink, AVATAR_BADGE_COLOR) < AVATAR_MIN_CONTRAST_RATIO
-    ) {
-      throw new Error("BM3 avatar theme does not meet the minimum contrast ratio");
-    }
-  }
-}
-
-assertAvatarThemeContrast();
-
 async function unbiasedIndex(seed, count) {
   if (!Number.isInteger(count) || count < 1 || count > 0x100000000) {
-    throw new Error("Invalid BM3 dictionary size");
+    throw new Error("Invalid word list size");
   }
   const range = 0x100000000;
   const limit = Math.floor(range / count) * count;
@@ -414,11 +387,11 @@ async function deriveCredential(answers) {
   if (!wordCatalogLoaded) throw new Error("The English word catalog is not ready");
   const canonical = canonicalAnswers(answers);
   const adjectiveIndex = await unbiasedIndex(
-    `bravemonkey:identity:${VERSION}:adjective:${canonical}`,
+    `bravemonkey:identity:${IDENTITY_PROTOCOL_VERSION}:adjective:${canonical}`,
     adjectives.length
   );
   const nounIndex = await unbiasedIndex(
-    `bravemonkey:identity:${VERSION}:noun:${canonical}`,
+    `bravemonkey:identity:${IDENTITY_PROTOCOL_VERSION}:noun:${canonical}`,
     nouns.length
   );
   const adjective = adjectives[adjectiveIndex];
@@ -427,90 +400,26 @@ async function deriveCredential(answers) {
     adjective,
     noun,
     username: `${adjective} ${noun}`.toUpperCase(),
-    pin: await pinFromWords(adjective, noun),
+    pin: await identityLibrary.pinFromWords(adjective, noun),
     adjectiveIndex,
     nounIndex,
-    version: VERSION
+    protocolVersion: IDENTITY_PROTOCOL_VERSION
   };
 }
 
-async function pinFromWords(adjective, noun) {
-  const digest = await sha256(`bravemonkey:pin:${VERSION}:${normalizeWord(adjective)}:${normalizeWord(noun)}`);
-  return String(readU32(digest) % 1000000).padStart(6, "0");
-}
-
 async function verifyPin(adjective, noun, pin) {
-  if (!wordCatalogLoaded || !/^\d{6}$/.test(String(pin))) return false;
-  if (!adjectives.some(word => word.toLowerCase() === normalizeWord(adjective))) return false;
-  if (!nouns.some(word => word.toLowerCase() === normalizeWord(noun))) return false;
-  return (await pinFromWords(adjective, noun)) === String(pin);
-}
-
-function escapeXml(value) {
-  return String(value).replace(/[&<>"']/g, character => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    "\"": "&quot;",
-    "'": "&apos;"
-  })[character]);
-}
-
-function avatarPatternMarkup(patternIndex, color) {
-  if (patternIndex === 0) {
-    const dots = [];
-    for (let row = 0; row < 10; row++) {
-      const y = 16 + row * 24;
-      const firstX = row % 2 === 0 ? 16 : 28;
-      for (let x = firstX; x <= 244; x += 24) {
-        dots.push(`<circle cx="${x}" cy="${y}" r="3.25"/>`);
-      }
-    }
-    return `<g fill="${color}">${dots.join("")}</g>`;
-  }
-
-  if (patternIndex === 1) {
-    const stripes = [];
-    for (let x = -260; x <= 260; x += 28) {
-      stripes.push(`<path d="M${x} 0L${x + 260} 260"/>`);
-    }
-    return `<g fill="none" stroke="${color}" stroke-width="5" stroke-linecap="round">${stripes.join("")}</g>`;
-  }
-
-  if (patternIndex === 2) {
-    const rings = [];
-    for (const [cx, cy] of [[0, 0], [260, 0], [0, 260], [260, 260]]) {
-      for (const radius of [24, 48, 72, 96]) {
-        rings.push(`<circle cx="${cx}" cy="${cy}" r="${radius}"/>`);
-      }
-    }
-    return `<g fill="none" stroke="${color}" stroke-width="3">${rings.join("")}</g>`;
-  }
-
-  if (patternIndex === 3) {
-    const waves = [];
-    for (let y = 16; y <= 240; y += 32) {
-      waves.push(`<path d="M-20 ${y}Q0 ${y - 14} 0 ${y}T40 ${y}T80 ${y}T120 ${y}T160 ${y}T200 ${y}T240 ${y}T280 ${y}"/>`);
-    }
-    return `<g fill="none" stroke="${color}" stroke-width="4" stroke-linecap="round">${waves.join("")}</g>`;
-  }
-
-  throw new Error("Invalid BM3 avatar pattern index");
+  if (!wordCatalogLoaded) return false;
+  return identityLibrary.validatePin(adjective, noun, pin);
 }
 
 async function avatarSvg(credential) {
-  const digest = await sha256(
-    `bravemonkey:avatar:${AVATAR_RENDERER_VERSION}:${normalizeWord(credential.adjective)}:${normalizeWord(credential.noun)}`
-  );
-  const theme = AVATAR_THEMES[digest[0] % AVATAR_THEMES.length];
-  const patternIndex = digest[1] % 4;
-  const rotation = (digest[2] % 4) * 90;
   const pair = `${credential.adjective} ${credential.noun}`;
   const initials = `${credential.adjective[0]}${credential.noun[0]}`.toUpperCase();
-  const title = escapeXml(t("avatar_title", { pair }));
-  const description = escapeXml(t("avatar_description", { pair, initials }));
-  const pattern = avatarPatternMarkup(patternIndex, theme.pattern);
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260" data-renderer-version="${AVATAR_RENDERER_VERSION}" xml:lang="${activeLocale}" role="img" aria-labelledby="avatar-title avatar-desc"><title id="avatar-title">${title}</title><desc id="avatar-desc">${description}</desc><defs><clipPath id="avatar-clip" clipPathUnits="userSpaceOnUse"><rect width="260" height="260" rx="36"/></clipPath></defs><rect width="260" height="260" rx="36" fill="${theme.background}"/><g clip-path="url(#avatar-clip)" transform="rotate(${rotation} 130 130)" opacity="0.58">${pattern}</g><rect x="28" y="58" width="204" height="144" rx="48" fill="${AVATAR_BADGE_COLOR}" stroke="${theme.pattern}" stroke-width="3"/><text x="130" y="130" text-anchor="middle" dominant-baseline="central" font-family="Arial,Helvetica,sans-serif" font-size="96" font-weight="800" letter-spacing="3" fill="${theme.ink}">${initials}</text></svg>`;
+  return identityLibrary.avatarSvg(credential.adjective, credential.noun, {
+    lang: activeLocale,
+    title: t("avatar_title", { pair }),
+    description: t("avatar_description", { pair, initials })
+  });
 }
 
 async function renderLatestAvatar() {
@@ -526,17 +435,6 @@ async function renderLatestAvatar() {
   } catch (error) {
     console.error("Brave Monkey avatar rendering error", error);
   }
-}
-
-function contactUrlForCredential(credential) {
-  const url = new URL("contact.html", document.baseURI);
-  const payload = new URLSearchParams({
-    alias: credential.username,
-    pin: credential.pin,
-    lang: activeLocale
-  });
-  url.hash = payload.toString();
-  return url.href;
 }
 
 function setContactCardStatus(key) {
@@ -570,7 +468,7 @@ function renderContactCard(credential, svg) {
   const qrHost = el("contactQr");
   qrHost.replaceChildren();
   new QRCodeConstructor(qrHost, {
-    text: contactUrlForCredential(credential),
+    text: latestVCard,
     width: 320,
     height: 320,
     colorDark: "#16352e",
@@ -685,39 +583,40 @@ async function createContactCardPng() {
   context.lineWidth = 3;
   context.stroke();
 
-  context.fillStyle = "#fce6d1";
-  roundedRect(context, 92, 86, 76, 76, 20);
-  context.fill();
-  context.fillStyle = "#16352e";
-  context.font = '700 46px system-ui, -apple-system, "Segoe UI", sans-serif';
-  context.fillText("🐒", 105, 143);
-  context.font = '850 42px system-ui, -apple-system, "Segoe UI", sans-serif';
-  context.fillText("Brave Monkey", 190, 128);
-  context.fillStyle = "#5b6b65";
-  context.font = '500 24px system-ui, -apple-system, "Segoe UI", sans-serif';
-  context.fillText(t("contact_card_edition"), 192, 166);
-
-  context.drawImage(avatar, 92, 292, 250, 250);
-  context.fillStyle = "#16352e";
-  setFittedFont(context, latestCredential.username, 700, 70, 850);
-  context.fillText(latestCredential.username, 390, 382);
-  context.font = '800 43px system-ui, -apple-system, "Segoe UI", sans-serif';
-  context.fillText(`PIN CODE: ${latestCredential.pin}`, 392, 474);
-  context.fillStyle = "#5b6b65";
-  context.font = '500 23px system-ui, -apple-system, "Segoe UI", sans-serif';
-  context.fillText(t("contact_card_pin_notice"), 392, 520);
-
-  const qrX = 1170;
-  const qrY = 275;
-  const qrSize = 330;
+  const qrX = 115;
+  const qrY = 135;
+  const qrSize = 600;
   context.fillStyle = "#ffffff";
-  context.fillRect(qrX, qrY, qrSize, qrSize);
+  roundedRect(context, qrX, qrY, qrSize, qrSize, 24);
+  context.fill();
   context.drawImage(qr, qrX + 28, qrY + 28, qrSize - 56, qrSize - 56);
   context.fillStyle = "#5b6b65";
-  context.font = '600 21px system-ui, -apple-system, "Segoe UI", sans-serif';
+  context.font = '600 26px system-ui, -apple-system, "Segoe UI", sans-serif';
   context.textAlign = "center";
-  context.fillText(t("contact_card_scan"), qrX + qrSize / 2, qrY + qrSize + 38);
+  context.fillText(t("contact_card_scan_caption"), qrX + qrSize / 2, qrY + qrSize + 42);
   context.textAlign = "left";
+
+  const contentX = 790;
+  context.fillStyle = "#16352e";
+  context.font = '800 42px system-ui, -apple-system, "Segoe UI", sans-serif';
+  context.fillText(t("contact_card_scan"), contentX, 220);
+  context.fillStyle = "#5b6b65";
+  context.font = '500 29px system-ui, -apple-system, "Segoe UI", sans-serif';
+  drawWrappedText(context, t("contact_card_scan_help"), contentX, 276, 690, 42);
+
+  context.strokeStyle = "#dbe6df";
+  context.lineWidth = 3;
+  context.beginPath();
+  context.moveTo(contentX, 430);
+  context.lineTo(1500, 430);
+  context.stroke();
+
+  context.drawImage(avatar, contentX, 505, 150, 150);
+  context.fillStyle = "#16352e";
+  setFittedFont(context, latestCredential.username, 520, 48, 850);
+  context.fillText(latestCredential.username, contentX + 185, 570);
+  context.font = '800 34px system-ui, -apple-system, "Segoe UI", sans-serif';
+  context.fillText(`PIN CODE: ${latestCredential.pin}`, contentX + 185, 635);
 
   context.fillStyle = "#5b6b65";
   context.font = '500 18px system-ui, -apple-system, "Segoe UI", sans-serif';
@@ -755,7 +654,7 @@ function setFieldError(id, key) {
 let questionnaireSubmitted = false;
 
 function validateQuestionnaire({ focusFirst = false } = {}) {
-  const day = el("birthdayDay").value;
+  const day = el("birthdayDay").querySelector('input[name="birthdayDay"]:checked')?.value ?? "";
   const siblings = el("siblings").value;
   const hadPet = el("hadPet").value;
 
@@ -803,7 +702,13 @@ function validateQuestionnaire({ focusFirst = false } = {}) {
 
   if (invalidFields.length > 0) {
     setFormError("error_fields");
-    if (focusFirst) el(invalidFields[0]).focus();
+    if (focusFirst) {
+      const firstInvalid = invalidFields[0];
+      const focusTarget = firstInvalid === "birthdayDay"
+        ? el("birthdayDay").querySelector('input[name="birthdayDay"]')
+        : el(firstInvalid);
+      focusTarget.focus();
+    }
     return null;
   }
 
@@ -891,7 +796,7 @@ el("questionnaire").addEventListener("submit", async event => {
     el("resultSection").scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
     setFormError("error_generation");
-    console.error("Brave Monkey BM3 generation error", error);
+    console.error("Brave Monkey alias generation error", error);
   } finally {
     isGenerating = false;
     updateActionAvailability();
@@ -942,7 +847,7 @@ el("downloadBtn").addEventListener("click", () => {
   const url = URL.createObjectURL(new Blob([latestSvg], { type: "image/svg+xml;charset=utf-8" }));
   const link = document.createElement("a");
   link.href = url;
-  link.download = `brave-monkey-${latestCredential.adjective.toLowerCase()}-${latestCredential.noun.toLowerCase()}-${VERSION}.svg`;
+  link.download = `brave-monkey-${latestCredential.adjective.toLowerCase()}-${latestCredential.noun.toLowerCase()}-${IDENTITY_PROTOCOL_VERSION}.svg`;
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -955,7 +860,7 @@ el("downloadCardBtn").addEventListener("click", async () => {
   el("downloadCardBtn").disabled = true;
   try {
     const blob = await createContactCardPng();
-    downloadBlob(blob, `brave-monkey-${latestCredential.adjective.toLowerCase()}-${latestCredential.noun.toLowerCase()}-BM3.png`);
+    downloadBlob(blob, `brave-monkey-${latestCredential.adjective.toLowerCase()}-${latestCredential.noun.toLowerCase()}-${IDENTITY_PROTOCOL_VERSION}.png`);
     setContactCardStatus("contact_card_png_done");
   } catch (error) {
     setContactCardError("contact_card_png_error");
@@ -973,7 +878,7 @@ el("downloadVCardBtn").addEventListener("click", () => {
   if (!latestVCard || !latestCredential) return;
   try {
     const blob = new Blob([latestVCard], { type: "text/vcard;charset=utf-8" });
-    downloadBlob(blob, `brave-monkey-${latestCredential.adjective.toLowerCase()}-${latestCredential.noun.toLowerCase()}-BM3.vcf`);
+    downloadBlob(blob, `brave-monkey-${latestCredential.adjective.toLowerCase()}-${latestCredential.noun.toLowerCase()}-${IDENTITY_PROTOCOL_VERSION}.vcf`);
     setContactCardStatus("contact_card_vcard_done");
   } catch (error) {
     setContactCardError("contact_card_vcard_error");
@@ -1007,7 +912,7 @@ el("verifyForm").addEventListener("submit", async event => {
     verifyResultKey = "";
     verifyErrorKey = "validator_failure";
     el("verifyError").hidden = false;
-    console.error("Brave Monkey BM3 PIN verification error", error);
+    console.error("Brave Monkey PIN verification error", error);
   }
   refreshDynamicMessages();
 });
@@ -1022,15 +927,14 @@ const appReady = Promise.all([localeReadyPromise, wordsReadyPromise]).then(
 );
 
 window.BraveMonkey = Object.freeze({
-  VERSION,
+  identityProtocolVersion: IDENTITY_PROTOCOL_VERSION,
   avatarRendererVersion: AVATAR_RENDERER_VERSION,
   ready: appReady,
   deriveCredential,
-  pinFromWords,
+  pinFromWords: identityLibrary.pinFromWords,
   verifyPin,
   avatarSvg,
   canonicalAnswers,
-  contactUrlForCredential,
   vCardForCredential,
   get dictionarySizes() {
     return { adjectives: adjectives.length, nouns: nouns.length };

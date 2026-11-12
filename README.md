@@ -2,25 +2,21 @@
 
 **Same answers. Same alias.**
 
-Brave Monkey is a static, browser-only generator for a reproducible English adjective–noun pseudonym, a six-digit public checksum, and a matching initials avatar. The active implementation is **BM3 only**; there are no BM1/BM2 compatibility paths.
+Brave Monkey is a static, browser-only generator for a reproducible English adjective–noun pseudonym, a six-digit public checksum, and a matching initials avatar. Its deterministic scheme is the **Brave Monkey Identity Protocol v1** (`identity-v1`).
 
 > **Not authentication:** the PIN is calculated from the public word pair. It is a checksum, not a password, proof of identity, or proof of account ownership. A service using these aliases must provide its own authentication and account IDs.
 
-## Run locally
+**[Try the live demo](https://vr4content.github.io/BraveMonkey/) · [Browse the source on GitHub](https://github.com/vr4content/BraveMonkey)**
 
-Serve the repository over localhost (opening `index.html` directly as a `file:` URL is not supported):
+Brave Monkey is a public, open-source project released under the MIT License. Explore how it works, reuse the code, or adapt it to help your project create an anonymous alias. The MIT license requires retaining its copyright and permission notice; bundled third-party components retain their own licenses.
 
-```sh
-python -m http.server 8000
-```
-
-Then visit <http://localhost:8000/>. The app uses the browser's SHA-256 Web Crypto API, which requires a secure context; localhost qualifies. No package install or build step is needed.
+## Project files
 
 ```text
 index.html                         Page markup and styles
-assets/app.js                      BM3 application and protocol
-contact.html                       Contact download page opened by the QR
-assets/contact.js                  Local contact download-page behavior
+assets/app.js                      Browser-side application and interface
+dist/bravemonkey.js                Standalone browser PIN/SVG library
+dist/BraveMonkey.php               Standalone PHP PIN/SVG library
 assets/vcard.js                    Shared vCard 3.0 serializer
 assets/words.yaml                  Ordered English-only word catalog
 assets/vendor/js-yaml.esm.min.js   Locally bundled YAML parser
@@ -30,7 +26,18 @@ assets/vendor/qrcodejs-LICENSE.txt QR generator license
 locales/web.yaml                   English, German, and Spanish UI text
 ```
 
-Bootstrap is loaded from its pinned jsDelivr CDN URL with subresource integrity. The YAML parser and QR generator are local. The app and its static catalogs are served from the same origin; questionnaire answers are not included in network requests.
+Bootstrap is loaded from its pinned jsDelivr CDN URL with subresource integrity. The YAML parser and QR generator are bundled with the project. Questionnaire answers are processed in the browser and are not included in network requests.
+
+## Standalone libraries
+
+The `dist` directory contains two self-contained files for third-party integrations:
+
+- [`dist/bravemonkey.js`](dist/bravemonkey.js) exposes the browser global `BraveMonkeyIdentity` for PIN calculation/validation and deterministic SVG generation.
+- [`dist/BraveMonkey.php`](dist/BraveMonkey.php) provides the equivalent `BraveMonkey\Identity` PHP class.
+
+Both files include quick-start examples, project links, API notes, and the MIT license in their comments. The JavaScript file uses browser Web Crypto and therefore needs HTTPS or localhost. The PIN remains a public checksum, not authentication.
+
+The libraries are generated from `assets/words.yaml`, `src/libraries/protocol.json`, and the source templates in `src/libraries/`. To rebuild them locally, run `node scripts/build-libraries.mjs`; to check the generated files and test JavaScript/PHP parity, run `node scripts/build-libraries.mjs --check` and `node tests/libraries.test.mjs`. GitHub Actions runs these checks on pull requests and publishes the two files as assets for `v*` GitHub Releases.
 
 ## Questionnaire
 
@@ -50,13 +57,13 @@ Each letter field limits entry to two Unicode grapheme characters (including pas
 
 If the pet answer is `NO`, the pet-name field is hidden and the protocol value is always `NONE`. There is no `UNKNOWN` value. The app does not ask for a birth month, colors, symbols, or other personal facts.
 
-## BM3 protocol
+## Brave Monkey Identity Protocol v1
 
-All protocol fields are strings. Prefixes below are already NFC-normalized and uppercased by the app. The canonical answers are serialized in this exact order with JavaScript `JSON.stringify`:
+The protocol identifier is `identity-v1`. All protocol fields are strings. Prefixes below are already NFC-normalized and uppercased by the app. The canonical answers are serialized in this exact order with JavaScript `JSON.stringify`:
 
 ```js
 const canonical = JSON.stringify([
-  "BM3",
+  "identity-v1",
   birthdayDay,       // "01" through "31"
   familyPrefix,      // uppercase mapping of two input Unicode letters
   fatherPrefix,      // uppercase mapping of two input Unicode letters
@@ -68,19 +75,19 @@ const canonical = JSON.stringify([
 ]);
 ```
 
-For each word list, BM3 selects an index independently:
+For each word list, the protocol selects an index independently:
 
 ```text
-seed = "bravemonkey:identity:BM3:adjective:" + canonical
-     or "bravemonkey:identity:BM3:noun:" + canonical
+seed = "bravemonkey:identity:identity-v1:adjective:" + canonical
+     or "bravemonkey:identity:identity-v1:noun:" + canonical
 ```
 
-Hash the UTF-8 seed with SHA-256 and read the first four digest bytes as an unsigned big-endian 32-bit integer. To avoid modulo bias, accept values below `floor(2^32 / count) * count` and return `value % count`. If a value is rejected, retry with `seed + ":retry:" + attempt`, starting at `attempt = 1`. The current ordered catalog contains **228 adjectives** and **500 nouns**. Its contents and order determine BM3 outputs; the page uses the current catalog only and does not support earlier catalog revisions.
+Hash the UTF-8 seed with SHA-256 and read the first four digest bytes as an unsigned big-endian 32-bit integer. To avoid modulo bias, accept values below `floor(2^32 / count) * count` and return `value % count`. If a value is rejected, retry with `seed + ":retry:" + attempt`, starting at `attempt = 1`. The current ordered catalog contains **228 adjectives** and **501 nouns**. Catalog contents and order determine the generated aliases.
 
 The displayed alias is the selected English adjective and noun, uppercased and separated by one space. The six-digit PIN is a public checksum of that pair alone:
 
 ```text
-message = UTF8("bravemonkey:pin:BM3:" + lowercase(trim(adjective))
+message = UTF8("bravemonkey:pin:identity-v1:" + lowercase(trim(adjective))
                                       + ":" + lowercase(trim(noun)))
 PIN = pad6(UINT32_BE(SHA256(message)[0..3]) mod 1,000,000)
 ```
@@ -92,17 +99,17 @@ The independent PIN checker also requires the adjective and noun to be present i
 After NFC normalization and uppercasing, this canonical answer array:
 
 ```json
-["BM3","07","PÉ","JO","KA","BO","1","YES","MÜ"]
+["identity-v1","07","PÉ","JO","KA","BO","1","YES","MÜ"]
 ```
 
-must select adjective index `74` (`Green`) and noun index `245` (`Tomato`), display **`GREEN TOMATO`**, and produce PIN **`088852`**. Its initials are **`GT`**. For example, lowercase `pé` and decomposed `mu\u0308` normalize to `PÉ` and `MÜ` respectively before serialization.
+must select adjective index `170` (`Uplifted`) and noun index `400` (`Jewel`), display **`UPLIFTED JEWEL`**, and produce PIN **`179752`**. Its initials are **`UJ`**. For example, lowercase `pé` and decomposed `mu\u0308` normalize to `PÉ` and `MÜ` respectively before serialization.
 
 ## Avatar
 
-The renderer version is **`BM3-avatar-v2`**. It derives the pastel theme, background pattern, pattern orientation, and initial-letter color from the English adjective–noun pair alone. Alias generation and the PIN are unchanged.
+The initials-avatar renderer identifier is **`initials-avatar-v1`**. It derives the pastel theme, background pattern, pattern orientation, and initial-letter color from the English adjective–noun pair alone.
 
 ```text
-seed = UTF8("bravemonkey:avatar:BM3-avatar-v2:" + lowercase(trim(adjective))
+seed = UTF8("bravemonkey:avatar:initials-avatar-v1:" + lowercase(trim(adjective))
                                          + ":" + lowercase(trim(noun)))
 digest = SHA256(seed)
 themeIndex = digest[0] mod 6
@@ -110,7 +117,7 @@ patternIndex = digest[1] mod 4
 rotationDegrees = 90 × (digest[2] mod 4)   // 0, 90, 180, or 270
 ```
 
-Reference selections: `GREEN TOMATO` has digest bytes `75, 141, 159` (theme `3`, pattern `1`, rotation `270°`); `BRAVE MONKEY` has bytes `131, 72, 183` (theme `5`, pattern `0`, rotation `270°`).
+Reference selections: `GREEN TOMATO` has digest bytes `51, 70, 239` (theme `3`, pattern `2`, rotation `270°`); `BRAVE MONKEY` has bytes `139, 239, 129` (theme `1`, pattern `3`, rotation `90°`).
 
 The theme table order is fixed:
 
@@ -137,7 +144,7 @@ The letters are centered at `(130,130)` in `Arial, Helvetica, sans-serif`, `96px
 
 ## Save and print a contact card
 
-After generating an alias, users can download a PNG identity card, print a wallet-sized version, or download a `.vcf` contact file. The QR opens the same site's `contact.html` page, which offers a `.vcf` download. The alias, PIN, and interface language are carried in the URL fragment; fragments are not sent in the HTTP request, and the page removes the fragment from browser history before displaying the contact. The page builds the vCard locally. Its `N`/`FN` fields contain the alias, `ORG` is `Brave Monkey`, and `NOTE` is exactly `PIN CODE: <six digits>`. No questionnaire answers, email address, or telephone number are included. This extra download step avoids the iPhone Camera contact importer dropping the vCard `NOTE` field. Because the QR is a link, generate final cards from the hosted HTTPS site; a localhost link cannot be opened by other phones. The QR graphic uses QRCode.js 1.0.0, bundled locally under its included MIT license.
+After generating an alias, users can download a PNG identity card, print a wallet-sized version, or download a `.vcf` contact file. The QR directly encodes a vCard 3.0, and the `.vcf` download uses the same payload. `N`/`FN` contain the alias, `ORG` is `vr4content`, `URL` is `https://vr4content.github.io/BraveMonkey/`, and both `TITLE` and `NOTE` contain exactly `PIN CODE: <six digits>`. The `TITLE` duplicate is a non-callable fallback to try on iPhone Camera scans, which have been observed to omit `NOTE`; it is not guaranteed to be imported. The PIN is deliberately not placed in `TEL`. No questionnaire answers, email address, or telephone number are included. The direct QR uses the phone's native contact-add flow, and the `.vcf` remains available if the Camera importer drops a field. The QR graphic uses QRCode.js 1.0.0, bundled locally under its included MIT license.
 
 The alias and PIN in a contact file are still a pseudonymous label and public checksum, not authentication. A phone may sync saved contacts to its cloud account, so the UI warns users before saving or printing the card.
 
@@ -146,31 +153,9 @@ The alias and PIN in a contact file are still a pseudonymous label and public ch
 - Answers are processed in the current browser tab. This app does not submit or persist them in cookies, local storage, or a database. They remain visible in the page until it is closed or reloaded; browser autofill and extensions are outside the app's control.
 - The static locale and word files contain no answers. Hosting, the Bootstrap CDN, the browser, and extensions can still observe ordinary network or webpage metadata.
 - Biographical answers are not secrets. Anyone who knows them and the public algorithm can derive the same alias.
-- There are `228 × 500 = 114,000` possible word pairs. Collisions are expected as usage grows; the checksum and avatar add no unique identities.
+- There are `228 × 501 = 114,228` possible word pairs. Collisions are expected as usage grows; the checksum and avatar add no unique identities.
 - Use the result as a memorable display pseudonym only. A receiving service should use an independent random account identifier and a real authenticator, such as a passkey.
 
-## Development checks
+## Protocol maintenance
 
-At minimum, after changing the app or its protocol inputs:
-
-```sh
-node --check assets/app.js
-node --check assets/contact.js
-node --check assets/vcard.js
-```
-
-Serve the site over localhost and check:
-
-- Repeating the reference vector and any questionnaire answers yields the same English pair, PIN, and visible avatar.
-- Each letter field limits entry to two Unicode grapheme characters, normalizes canonically equivalent input to the same result, rejects non-letter content, and highlights all incorrect fields with focus on the first one.
-- Selecting `NO` for pets uses `NONE`; selecting `YES` requires the first pet's two-letter prefix. Sibling values outside the fixed choices are rejected.
-- The validator accepts the correct six-digit PIN and rejects an incorrect PIN or a word outside the catalog.
-- The `BM3-avatar-v2` reference selections match the documented digest bytes; theme, pattern, rotation, and initials stay identical when the interface language changes. All six theme ink colors pass the `7:1` contrast checks.
-- English, German, Spanish, regional browser language tags, English fallback, manual selection, translated status/errors, and `document.documentElement.lang` behave correctly.
-- Changing language does not change canonical answers, the English pair, PIN, initials, or visible avatar artwork.
-- The QR link resolves correctly at the site root and under an HTTPS project subpath. Scan it on current iOS and Android, download/open the `.vcf`, and verify the imported alias, `ORG:Brave Monkey`, and `NOTE: PIN CODE: <PIN>`.
-- The contact link carries only alias, PIN, and locale in its fragment; confirm the contact page clears the fragment and that no contact data is sent in the HTTP request. The generated `.vcf` must contain no questionnaire answers, email, or telephone number.
-- The PNG download includes a readable QR, alias, and PIN; print preview fits the wallet-card page size, and the `.vcf` fallback imports the same contact.
-- The YAML files load under localhost and an HTTPS project subpath, and no questionnaire answers are sent in network requests or saved in persistent browser storage.
-
-Changes to canonical answer order, normalization, hash namespaces, PIN formula, or visible avatar derivation change reproducibility and require a protocol/renderer version change. Catalog edits also change generated aliases; this project intentionally uses the current catalog only, with no compatibility for earlier catalog revisions.
+The ordered word catalog, canonical answer order, normalization rules, protocol and renderer identifiers, PIN formula, and avatar derivation all affect reproducibility. Update the reference vectors whenever any of these change. The protocol uses the current word catalog; changes to its contents or order change generated aliases.

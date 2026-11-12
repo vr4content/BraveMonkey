@@ -14,7 +14,9 @@ export function vCardForCredential(credential) {
     "VERSION:3.0",
     `N:;${name};;;`,
     `FN:${name}`,
-    "ORG:Brave Monkey",
+    "ORG:vr4content",
+    "URL:https://vr4content.github.io/BraveMonkey/",
+    `TITLE:PIN CODE: ${pin}`,
     `NOTE:PIN CODE: ${pin}`,
     "END:VCARD",
     ""

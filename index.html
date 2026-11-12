@@ -27,6 +27,15 @@
     .form-label{font-weight:650;font-size:.91rem}
     .form-select,.form-control{border-color:#cedbd1;border-radius:11px;padding:.7rem .8rem;min-height:47px}
     .form-select:focus,.form-control:focus{border-color:#339b74;box-shadow:0 0 0 .2rem #61bd9329}
+    .day-picker-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.2rem 0;border:1px solid #cedbd1;border-radius:11px;padding:.45rem .55rem;background:#fff}
+    .day-picker-cell{position:relative;display:grid;place-items:center;min-width:0}
+    .day-picker-radio{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;clip-path:inset(50%)}
+    .day-picker-label{display:flex;align-items:center;justify-content:center;width:min(100%,42px);aspect-ratio:1;border:1px solid transparent;border-radius:50%;color:var(--bm-ink);font-size:.9rem;font-variant-numeric:tabular-nums;cursor:pointer}
+    .day-picker-label:hover{background:#e8f5ed;border-color:#c6d7cf}
+    .day-picker-radio:checked+.day-picker-label{background:var(--bm-leaf);border-color:var(--bm-leaf);color:#fff;font-weight:750}
+    .day-picker-radio:checked+.day-picker-label:hover{background:#115b4d;border-color:#115b4d}
+    .day-picker-radio:focus-visible+.day-picker-label{outline:3px solid var(--bm-warm);outline-offset:2px}
+    .day-picker.is-invalid .invalid-feedback{display:block}
     .text-muted-strong{color:var(--bm-muted)}
     .btn-forest{background:var(--bm-leaf);color:white;border:none;border-radius:13px;font-weight:750;padding:.8rem 1.4rem}
     .btn-forest:hover,.btn-forest:focus{background:#115b4d;color:white}
@@ -39,22 +48,28 @@
     .alias{font-size:clamp(1.6rem,3.4vw,2.6rem);font-weight:800;letter-spacing:-.045em}
     .pin-box{font-variant-numeric:tabular-nums;font-size:1.5rem;letter-spacing:.18em;font-weight:800}
     .result-subtitle{color:#d0e8df}
-    .identity-contact-card{display:grid;grid-template-columns:92px minmax(0,1fr) 148px;grid-template-rows:auto 1fr;align-items:center;gap:16px;width:100%;max-width:780px;min-height:280px;aspect-ratio:1.586;padding:24px;background:linear-gradient(135deg,#fff,#f4faf7);color:var(--bm-ink);border:1px solid var(--bm-border);border-radius:20px;box-shadow:0 10px 30px #19352d10}
-    .contact-card-brand{grid-column:1/-1;display:flex;align-items:center;gap:12px}
-    .contact-card-brand-icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:13px;background:#fce6d1;font-size:26px}
-    .contact-card-brand-title{font-size:1.1rem;font-weight:850;letter-spacing:-.04em}
-    .contact-card-edition{font-size:.75rem;color:var(--bm-muted)}
-    .contact-card-avatar{width:92px;height:92px;overflow:hidden;border-radius:15px}
+    .identity-contact-card{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);grid-template-rows:minmax(0,1fr) auto;align-items:stretch;gap:20px;width:100%;max-width:780px;min-height:380px;aspect-ratio:1.586;padding:24px;background:linear-gradient(135deg,#fff,#f4faf7);color:var(--bm-ink);border:1px solid var(--bm-border);border-radius:20px;box-shadow:0 10px 30px #19352d10}
+    .contact-card-qr-block{grid-column:1;grid-row:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;text-align:center;color:var(--bm-muted)}
+    .contact-card-content{grid-column:2;grid-row:1;display:flex;flex-direction:column;justify-content:space-between;gap:20px;min-width:0;padding:6px 0}
+    .contact-card-details{display:flex;align-items:center;gap:14px;min-width:0}
+    .contact-card-details>div:last-child{display:flex;flex:1 1 0;flex-direction:column;justify-content:center;min-width:0}
+    .contact-card-avatar{width:58px;height:58px;flex:none;overflow:hidden;border-radius:12px}
     .contact-card-avatar svg{display:block;width:100%;height:100%}
-    .contact-card-alias{font-size:clamp(1.1rem,3.5vw,1.9rem);font-weight:850;line-height:1.1;overflow-wrap:anywhere}
-    .contact-card-pin{font-size:clamp(1rem,2.7vw,1.35rem);font-weight:800;letter-spacing:.05em;font-variant-numeric:tabular-nums;margin-top:.45rem}
-    .contact-card-notice{font-size:.72rem;color:var(--bm-muted);margin:.35rem 0 0}
-    .contact-card-qr-block{justify-self:end;text-align:center;font-size:.68rem;color:var(--bm-muted)}
-    .contact-qr{display:inline-block;padding:11px;background:#fff;border:1px solid #e4ebe6;border-radius:10px;line-height:0}
-    .contact-qr canvas,.contact-qr img{width:120px!important;height:120px!important;image-rendering:pixelated}
-    .contact-card-actions{display:flex;flex-wrap:wrap;gap:.5rem}
-    @media (max-width:575px){.identity-contact-card{grid-template-columns:60px minmax(0,1fr) 94px;gap:9px;padding:12px;min-height:0;aspect-ratio:auto}.contact-card-brand-icon{width:34px;height:34px;font-size:21px}.contact-card-avatar{width:60px;height:60px}.contact-qr{padding:7px}.contact-qr canvas,.contact-qr img{width:78px!important;height:78px!important}}
-    .warning{background:#fff6e8;border:1px solid #efdbad;color:#6a5028;border-radius:15px;padding:14px 16px}
+    .contact-card-alias{font-size:clamp(.95rem,1.7vw,1.2rem);font-weight:850;line-height:1.15;overflow-wrap:anywhere}
+    .contact-card-pin{font-size:clamp(.78rem,1.35vw,.95rem);font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums;margin-top:.35rem}
+    .contact-scan-instruction{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:14px;row-gap:12px;max-width:none;margin:0;padding:16px;background:#f4faf7;border:1px solid #d3e7da;border-radius:16px;text-align:left;color:var(--bm-ink)}
+    .contact-scan-icon{width:52px;height:52px;flex:none;color:var(--bm-leaf)}
+    .contact-scan-copy{min-width:0}
+    .contact-scan-copy strong{display:block;font-size:clamp(1.08rem,2.1vw,1.3rem);line-height:1.2}
+    .contact-scan-steps{grid-column:1/-1;display:grid;gap:9px;list-style:none;margin:0;padding:0}
+    .contact-scan-steps li{display:grid;grid-template-columns:2rem minmax(0,1fr);align-items:start;gap:10px;color:var(--bm-muted);font-size:clamp(.88rem,1.55vw,1rem);line-height:1.35}
+    .contact-scan-step-number{display:flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:50%;background:#e8f5ed;color:var(--bm-leaf);font-size:1.15rem;font-weight:850;line-height:1;font-variant-numeric:tabular-nums}
+    .contact-qr{display:inline-flex;align-items:center;justify-content:center;max-width:100%;padding:12px;background:#fff;border:1px solid #e4ebe6;border-radius:12px;line-height:0}
+    .contact-qr canvas,.contact-qr img{display:block;width:clamp(190px,20vw,260px)!important;height:clamp(190px,20vw,260px)!important;image-rendering:pixelated}
+    .contact-card-scan-caption{display:none;font-size:5pt;color:var(--bm-muted);text-align:center;margin-top:.5mm}
+    .contact-card-actions{grid-column:1/-1;grid-row:2;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5rem;padding-top:16px;border-top:1px solid var(--bm-border)}
+    .contact-card-actions .btn{white-space:nowrap}
+    @media (max-width:767px){.identity-contact-card{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto;gap:18px;padding:16px;min-height:0;aspect-ratio:auto}.contact-card-qr-block{grid-column:1;grid-row:1}.contact-card-content{grid-column:1;grid-row:2;gap:14px;padding:0}.contact-scan-instruction{padding:14px;row-gap:10px}.contact-scan-icon{width:48px;height:48px}.contact-qr{padding:9px}.contact-qr canvas,.contact-qr img{width:clamp(200px,55vw,248px)!important;height:clamp(200px,55vw,248px)!important}.contact-card-actions{grid-column:1;grid-row:3;display:grid;grid-template-columns:1fr}.contact-card-actions .btn{width:100%}}
     .footer{font-size:.9rem;color:#5b6b65}
     :focus-visible{outline:3px solid #ffa953;outline-offset:3px}
     @media (max-width:575px){.hero{border-radius:18px}.card-lite{border-radius:18px}.hero-preview{max-width:200px;transform:none}.hero-preview .emoji{font-size:55px}}
@@ -64,9 +79,8 @@
       html,body{width:85.6mm;height:54mm;margin:0!important;background:#fff!important}
       body *{visibility:hidden!important}
       #contactCard,#contactCard *{visibility:visible!important}
-      #contactCard{position:fixed!important;left:0!important;top:0!important;z-index:9999;width:85.6mm!important;height:54mm!important;min-height:0!important;max-width:none!important;aspect-ratio:auto!important;padding:3mm!important;grid-template-columns:19mm minmax(0,1fr) 25mm!important;grid-template-rows:7mm 1fr!important;gap:1mm!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important}
-      .contact-card-brand{gap:2mm!important}.contact-card-brand-icon{width:6mm!important;height:6mm!important;font-size:10pt!important;border-radius:2mm!important}.contact-card-brand-title{font-size:9pt!important}.contact-card-edition{font-size:5pt!important}
-      .contact-card-avatar{width:18mm!important;height:18mm!important;border-radius:2mm!important}.contact-card-alias{font-size:11pt!important;line-height:1.05!important}.contact-card-pin{font-size:9pt!important;letter-spacing:.02em!important;margin-top:1mm!important}.contact-card-notice{font-size:5pt!important;line-height:1.1!important;margin-top:1mm!important}.contact-card-qr-block{font-size:5pt!important;line-height:1.1!important}.contact-qr{padding:2mm!important;border:0!important;border-radius:0!important}.contact-qr canvas,.contact-qr img{width:19mm!important;height:19mm!important}
+      #contactCard{position:fixed!important;left:0!important;top:0!important;z-index:9999;width:85.6mm!important;height:54mm!important;min-height:0!important;max-width:none!important;aspect-ratio:auto!important;padding:3mm!important;grid-template-columns:32mm minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;gap:2mm!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important}
+      #contactCard .contact-card-actions{display:none!important}.contact-card-qr-block{grid-column:1!important;grid-row:1!important;font-size:5pt!important;line-height:1.1!important}.contact-card-content{grid-column:2!important;grid-row:1!important;gap:2mm!important;padding:0!important;justify-content:center!important}.contact-card-details{gap:1.5mm!important}.contact-card-avatar{width:12mm!important;height:12mm!important;border-radius:1.5mm!important}.contact-card-alias{font-size:8pt!important;line-height:1.05!important}.contact-card-pin{font-size:7pt!important;letter-spacing:.02em!important;margin-top:1mm!important}.contact-scan-instruction{display:none!important}.contact-card-scan-caption{display:block!important}.contact-qr{padding:1mm!important;border:0!important;border-radius:0!important}.contact-qr canvas,.contact-qr img{width:28mm!important;height:28mm!important}
     }
     [hidden]{display:none!important}
   </style>
@@ -79,7 +93,6 @@
       <select id="languageSelect" class="form-select form-select-sm language-select" aria-label="Interface language" data-i18n-aria-label="language_label" disabled>
         <option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option>
       </select>
-      <span class="pill d-none d-sm-inline-block" data-i18n="navigation_version">Prototype · BM3</span>
     </div>
   </div></nav>
   <main id="top" class="container py-4 py-lg-5">
@@ -88,12 +101,12 @@
         <div class="col-lg-7">
           <div class="eyebrow mb-3" data-i18n="hero_eyebrow">One little questionnaire · One familiar alias</div>
           <h1><span data-i18n="hero_heading_start">Same answers.</span><br><span style="color:#208767" data-i18n="hero_heading_end">Same alias.</span></h1>
-          <p class="lead mt-3 mb-4" data-i18n="hero_description">Create a memorable pseudonym and a matching initials avatar. Come back, answer the same questions, and regenerate it—without creating an account here.</p>
+          <p class="lead mt-3 mb-4" data-i18n="hero_description">Brave Monkey creates a memorable alias, not secure credentials. If you forget it, answer the same questions again to regenerate the alias and initials avatar—no account needed.</p>
           <a class="btn btn-forest btn-lg me-2 mb-2" href="#questionnaire" data-i18n="hero_create_alias">Create my alias ↓</a>
           <a class="btn btn-light-line btn-lg mb-2" href="#validator" data-i18n="hero_check_pin">Check a PIN</a>
           <div class="mt-3 d-flex flex-wrap gap-2"><span class="pill" data-i18n="badge_no_database">No generator database</span><span class="pill" data-i18n="badge_browser">Runs in your browser</span><span class="pill" data-i18n="badge_svg">Free SVG download</span></div>
         </div>
-        <div class="col-lg-5"><div class="hero-preview" aria-hidden="true"><div class="emoji">🐒</div><div class="fw-bold fs-3">BRAVE MONKEY</div><div class="text-muted-strong" data-i18n="sample_identity">A sample identity</div><span class="badge text-bg-light mt-2 border" data-i18n="sample_not_password">Not a password</span></div></div>
+          <div class="col-lg-5"><div class="hero-preview" aria-hidden="true"><div class="emoji">🐒</div><div class="fw-bold fs-3">BRAVE MONKEY</div><div class="text-muted-strong" data-i18n="sample_identity">A sample identity</div></div></div>
       </div>
     </section>
     <div class="row g-4 align-items-start">
@@ -102,10 +115,16 @@
           <section class="card-lite p-4">
             <div class="d-flex gap-3 mb-4"><span class="section-tag">1</span><div><h2 class="h4 fw-bold mb-1" data-i18n="questions_title">Your personal questions</h2><p class="text-muted-strong mb-0" data-i18n="questions_description">Answer consistently each time. Enter exactly two letters in every letter field.</p></div></div>
             <div class="row g-3">
-              <div class="col-sm-6"><label class="form-label" for="birthdayDay" data-i18n="question_day_label">Day of the month of your birthday</label><select class="form-select" id="birthdayDay" required aria-describedby="birthdayDayError"><option value="" data-i18n="question_day_placeholder">Select day</option></select><div id="birthdayDayError" class="invalid-feedback" data-i18n="error_day">Choose a day from 01 to 31.</div></div>
-              <div class="col-sm-6"><label class="form-label" for="familyPrefix" data-i18n="question_family_prefix">First two letters of your family name</label><input class="form-control unicode-prefix" id="familyPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint familyPrefixError"><div id="familyPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
-              <div class="col-sm-6"><label class="form-label" for="fatherPrefix" data-i18n="question_father_prefix">First two letters of your father's first name</label><input class="form-control unicode-prefix" id="fatherPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint fatherPrefixError"><div id="fatherPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
-              <div class="col-sm-6"><label class="form-label" for="motherPrefix" data-i18n="question_mother_prefix">First two letters of your mother's first name</label><input class="form-control unicode-prefix" id="motherPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint motherPrefixError"><div id="motherPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
+              <fieldset id="birthdayDay" class="col-sm-6 day-picker" aria-describedby="birthdayDayError">
+                <legend class="form-label" data-i18n="question_day_label">Day of the month of your birthday</legend>
+                <div id="birthdayDayGrid" class="day-picker-grid"></div>
+                <div id="birthdayDayError" class="invalid-feedback" data-i18n="error_day">Choose a day from 01 to 31.</div>
+              </fieldset>
+              <div class="col-sm-6 d-flex flex-column gap-3">
+                <div><label class="form-label" for="familyPrefix" data-i18n="question_family_prefix">First two letters of your family name</label><input class="form-control unicode-prefix" id="familyPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint familyPrefixError"><div id="familyPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
+                <div><label class="form-label" for="fatherPrefix" data-i18n="question_father_prefix">First two letters of your father's first name</label><input class="form-control unicode-prefix" id="fatherPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint fatherPrefixError"><div id="fatherPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
+                <div><label class="form-label" for="motherPrefix" data-i18n="question_mother_prefix">First two letters of your mother's first name</label><input class="form-control unicode-prefix" id="motherPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint motherPrefixError"><div id="motherPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
+              </div>
               <div class="col-sm-6"><label class="form-label" for="birthplacePrefix" data-i18n="question_birthplace_prefix">First two letters of your place of birth</label><input class="form-control unicode-prefix" id="birthplacePrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint birthplacePrefixError"><div id="birthplacePrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
               <div class="col-sm-6"><label class="form-label" for="siblings" data-i18n="question_siblings">How many siblings did you grow up with?</label><select class="form-select" id="siblings" required aria-describedby="siblingsError"><option value="" data-i18n="question_select_answer">Select an answer</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4PLUS" data-i18n="question_siblings_four_plus">4 or more</option></select><div id="siblingsError" class="invalid-feedback" data-i18n="error_siblings">Choose a sibling-count option.</div></div>
               <div class="col-sm-6"><label class="form-label" for="hadPet" data-i18n="question_had_pet">Have you ever had a pet?</label><select class="form-select" id="hadPet" required aria-describedby="hadPetError"><option value="" data-i18n="question_select_answer">Select an answer</option><option value="YES" data-i18n="option_yes">Yes</option><option value="NO" data-i18n="option_no">No</option></select><div id="hadPetError" class="invalid-feedback" data-i18n="error_pet_choice">Choose Yes or No.</div></div>
@@ -120,37 +139,54 @@
         <section id="resultSection" class="mt-4" hidden aria-live="polite" tabindex="-1">
           <div class="result-card"><div class="row align-items-center g-4">
             <div class="col-sm-5 text-center"><div id="svgPreview" class="identity-icon"></div></div>
-            <div class="col-sm-7"><p class="text-uppercase small fw-bold result-subtitle mb-2" data-i18n="result_title">Your reproducible alias</p><h2 id="resultAlias" class="alias mb-2"></h2><div class="pin-box" id="resultPin"></div><p class="result-subtitle mt-2" data-i18n="result_version_note">Version BM3 · This PIN is a public checksum, not a password.</p><div class="d-flex gap-2 flex-wrap"><button type="button" class="btn btn-light btn-sm fw-bold" id="copyBtn" data-i18n="result_copy">Copy alias + PIN</button><button type="button" class="btn btn-outline-light btn-sm fw-bold" id="downloadBtn" data-i18n="result_download">Download SVG</button></div><div id="actionNotice" class="small mt-2" aria-live="polite"></div></div>
+            <div class="col-sm-7"><p class="text-uppercase small fw-bold result-subtitle mb-2" data-i18n="result_title">Your reproducible alias</p><h2 id="resultAlias" class="alias mb-2"></h2><div class="pin-box" id="resultPin"></div><div class="d-flex gap-2 flex-wrap mt-2"><button type="button" class="btn btn-light btn-sm fw-bold" id="copyBtn" data-i18n="result_copy">Copy alias + PIN</button><button type="button" class="btn btn-outline-light btn-sm fw-bold" id="downloadBtn" data-i18n="result_download">Download SVG</button></div><div id="actionNotice" class="small mt-2" aria-live="polite"></div></div>
           </div></div>
-          <div class="warning mt-3"><strong data-i18n="result_warning_title">⚠ Identity is not authentication.</strong> <span data-i18n="result_warning_text">Anyone can calculate the valid PIN for a known word pair. Do not use this three-part result as a login password or proof of account ownership. A destination platform needs a separate authentication method (for example, passkeys).</span></div>
           <p class="small mt-3 text-muted-strong" data-i18n="result_repeat_note">If you repeat every answer exactly, Brave Monkey will regenerate the same result. This page doesn't remember your answers after you leave.</p>
           <section id="contactCardPanel" class="card-lite p-4 mt-4" aria-labelledby="contactCardTitle">
             <h3 id="contactCardTitle" class="h5 fw-bold" data-i18n="contact_card_title">Save your identity</h3>
-            <p class="small text-muted-strong" data-i18n="contact_card_description">Download or print this card. The QR opens a contact-download page; generate final cards from the hosted site so phones can reach it.</p>
-            <article id="contactCard" class="identity-contact-card" aria-label="Brave Monkey BM3 contact card" data-i18n-aria-label="contact_card_aria">
-              <div class="contact-card-brand"><span class="contact-card-brand-icon" aria-hidden="true">🐒</span><div><div class="contact-card-brand-title">Brave Monkey</div><div class="contact-card-edition" data-i18n="contact_card_edition">BM3 identity card</div></div></div>
-              <div id="contactCardAvatar" class="contact-card-avatar"></div>
-              <div class="contact-card-details"><div id="contactCardAlias" class="contact-card-alias"></div><div id="contactCardPin" class="contact-card-pin">PIN CODE: 000000</div><p class="contact-card-notice" data-i18n="contact_card_pin_notice">Public checksum — not a password.</p></div>
-              <div class="contact-card-qr-block"><div id="contactQr" class="contact-qr" role="img" aria-label="QR link to the Brave Monkey contact download page" data-i18n-aria-label="contact_card_qr_aria"></div><div class="mt-1" data-i18n="contact_card_scan">Scan to download contact</div></div>
+            <p class="small text-muted-strong" data-i18n="contact_card_description">Scan the QR to add your contact, or choose a download option below.</p>
+            <article id="contactCard" class="identity-contact-card" aria-label="Brave Monkey contact card" data-i18n-aria-label="contact_card_aria">
+              <div class="contact-card-qr-block">
+                <div id="contactQr" class="contact-qr" role="img" aria-label="Direct vCard QR code for the alias and PIN" data-i18n-aria-label="contact_card_qr_aria"></div>
+                <div class="contact-card-scan-caption" data-i18n="contact_card_scan_caption">Scan to add contact</div>
+              </div>
+              <div class="contact-card-content">
+                <div class="contact-scan-instruction">
+                  <svg class="contact-scan-icon" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="7" y="3" width="25" height="42" rx="5" stroke="currentColor" stroke-width="3"/><path d="M16 8h7M17 39h5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M13 15h6v6h-6zM23 15h4v4h-4zM23 23h4v5h-4zM13 25h6v6h-6zM16 17h1v2h-1zM25 31h2v3h-2z" fill="currentColor"/><path d="M37 13v-4h4M44 13V9h-4M37 31v4h4M44 31v4h-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <div class="contact-scan-copy"><strong data-i18n="contact_card_scan">Scan with your phone</strong></div>
+                  <ol class="contact-scan-steps">
+                    <li><span class="contact-scan-step-number" aria-hidden="true">1</span><span data-i18n="contact_card_scan_step_1">Open your camera and point to the QRCode</span></li>
+                    <li><span class="contact-scan-step-number" aria-hidden="true">2</span><span data-i18n="contact_card_scan_step_2">Tap the contact prompt</span></li>
+                    <li><span class="contact-scan-step-number" aria-hidden="true">3</span><span data-i18n="contact_card_scan_step_3">Save the contact in your phone contact list</span></li>
+                  </ol>
+                </div>
+                <div class="contact-card-details"><div id="contactCardAvatar" class="contact-card-avatar"></div><div><div id="contactCardAlias" class="contact-card-alias"></div><div id="contactCardPin" class="contact-card-pin">PIN CODE: 000000</div></div></div>
+              </div>
+              <div class="contact-card-actions"><button id="downloadCardBtn" type="button" class="btn btn-forest" disabled data-i18n="contact_card_download_png">Download image (PNG)</button><button id="downloadVCardBtn" type="button" class="btn btn-light-line" disabled data-i18n="contact_card_download_vcard">Download contact (.vcf)</button><button id="printCardBtn" type="button" class="btn btn-light-line" disabled data-i18n="contact_card_print">Print card</button></div>
             </article>
-            <p class="small text-muted-strong mt-3 mb-2" data-i18n="contact_card_privacy">The QR link carries only your alias, PIN, and interface language in its URL fragment; the fragment is not sent in the page request. It includes no answers, email, or phone number. The site must be online for the download page to work. Your phone may sync saved contacts to a cloud account.</p>
-            <div id="contactCardStatus" class="small text-muted-strong mb-2" role="status" aria-live="polite" hidden></div>
+            <div id="contactCardStatus" class="small text-muted-strong mt-3 mb-2" role="status" aria-live="polite" hidden></div>
             <div id="contactCardError" class="small text-danger mb-2" role="alert" hidden></div>
-            <div class="contact-card-actions"><button id="downloadCardBtn" type="button" class="btn btn-forest" disabled data-i18n="contact_card_download_png">Download image (PNG)</button><button id="printCardBtn" type="button" class="btn btn-light-line" disabled data-i18n="contact_card_print">Print card</button><button id="downloadVCardBtn" type="button" class="btn btn-light-line" disabled data-i18n="contact_card_download_vcard">Download contact (.vcf)</button></div>
+            <p class="small text-muted-strong mt-3 mb-0" data-i18n="contact_card_privacy">The contact includes your alias, vr4content, website, and PIN. Questionnaire answers, email, and phone numbers are not included. Your phone may sync saved contacts to a cloud account.</p>
           </section>
         </section>
       </div>
       <aside class="col-lg-4">
-        <div class="card-lite p-4 mb-4"><div class="eyebrow mb-2" data-i18n="how_eyebrow">How it works</div><h2 class="h5 fw-bold" data-i18n="how_title">Your answers become a seed</h2><p class="text-muted-strong small" data-i18n="how_description">A fixed set of answers is normalized and hashed locally with SHA-256. The hash selects an English adjective and noun. A public formula calculates a checksum PIN from those words, and a versioned SVG algorithm creates an avatar from their initials.</p><div class="small"><span class="pill" data-i18n="how_deterministic">Deterministic</span> <span class="pill" data-i18n="how_no_registration">No registration</span></div></div>
+         <div class="card-lite p-4 mb-4"><div class="eyebrow mb-2" data-i18n="how_eyebrow">How it works</div><h2 class="h5 fw-bold mb-2" data-i18n="how_title">Your answers become a seed</h2><p class="text-muted-strong small" data-i18n="how_description">Your answers are processed in this browser to select an English adjective and noun, calculate a PIN, and create an initials avatar. Repeat the same answers to get the same result.</p><div class="small"><span class="pill" data-i18n="how_deterministic">Deterministic</span> <span class="pill" data-i18n="how_no_registration">No registration</span></div></div>
         <div class="card-lite p-4" id="validator"><div class="eyebrow mb-2" data-i18n="validator_eyebrow">Independent checksum</div><h2 class="h5 fw-bold" data-i18n="validator_title">Does the PIN match?</h2><p class="small text-muted-strong" data-i18n="validator_description">Recalculate a PIN from an adjective and noun without knowing the questionnaire answers.</p>
-          <form id="verifyForm" class="d-grid gap-3" novalidate><div><label class="form-label" for="verifyAdjective" data-i18n="validator_adjective">Adjective</label><input class="form-control" id="verifyAdjective" placeholder="e.g. Brave" data-i18n-placeholder="validator_adjective_placeholder" required autocomplete="off"></div><div><label class="form-label" for="verifyNoun" data-i18n="validator_noun">Noun</label><input class="form-control" id="verifyNoun" placeholder="e.g. Monkey" data-i18n-placeholder="validator_noun_placeholder" required autocomplete="off"></div><div><label class="form-label" for="verifyPin" data-i18n="validator_pin">6-digit PIN</label><input class="form-control" id="verifyPin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000" data-i18n-placeholder="validator_pin_placeholder" required autocomplete="off"></div><div id="verifyError" class="small text-danger" role="alert" hidden></div><button id="verifyBtn" class="btn btn-light-line" type="submit" disabled data-i18n="validator_button">Validate BM3 checksum</button><div id="verifyResult" class="small fw-semibold" role="status" aria-live="polite"></div></form>
+           <form id="verifyForm" class="d-grid gap-3" novalidate><div><label class="form-label" for="verifyAdjective" data-i18n="validator_adjective">Adjective</label><input class="form-control" id="verifyAdjective" placeholder="e.g. Brave" data-i18n-placeholder="validator_adjective_placeholder" required autocomplete="off"></div><div><label class="form-label" for="verifyNoun" data-i18n="validator_noun">Noun</label><input class="form-control" id="verifyNoun" placeholder="e.g. Monkey" data-i18n-placeholder="validator_noun_placeholder" required autocomplete="off"></div><div><label class="form-label" for="verifyPin" data-i18n="validator_pin">6-digit PIN</label><input class="form-control" id="verifyPin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000" data-i18n-placeholder="validator_pin_placeholder" required autocomplete="off"></div><div id="verifyError" class="small text-danger" role="alert" hidden></div><button id="verifyBtn" class="btn btn-light-line" type="submit" disabled data-i18n="validator_button">Check PIN</button><div id="verifyResult" class="small fw-semibold" role="status" aria-live="polite"></div></form>
         </div>
       </aside>
     </div>
-    <footer class="footer border-top mt-5 py-4 d-flex flex-wrap gap-2 justify-content-between"><span data-i18n="footer_copyright">© Brave Monkey · Prototype</span><span data-i18n="footer_notice">All calculations happen in your browser · Not a secure login system</span></footer>
+    <section class="card-lite p-4 mt-5" aria-labelledby="openSourceTitle">
+      <h2 id="openSourceTitle" class="h5 fw-bold mb-2" data-i18n="open_source_title">Open source: build on this project</h2>
+      <p class="small text-muted-strong mb-3" data-i18n="open_source_description">Brave Monkey is a static site hosted on GitHub Pages: no application server receives your answers; calculations run in your browser. This reduces server-side exposure, though your browser, host/CDN, and extensions can still process ordinary page and network metadata. The source is public to inspect, so the algorithm is not secret—and the alias/PIN are not secure credentials.</p>
+      <a class="btn btn-light-line" href="https://github.com/vr4content/BraveMonkey" target="_blank" rel="noopener noreferrer" data-i18n="open_source_link">Explore the source on GitHub ↗</a>
+    </section>
+    <footer class="footer border-top mt-5 py-4 d-flex flex-wrap gap-2 justify-content-between"><span data-i18n="footer_copyright">© Brave Monkey · This is an idea of vr4content.com</span><span data-i18n="footer_notice">All calculations happen in your browser · Same answers, same alias</span></footer>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   <script src="assets/vendor/qrcodejs.min.js"></script>
+  <script src="dist/bravemonkey.js"></script>
   <script type="module" src="assets/app.js"></script>
 </body>
 </html>

@@ -14,10 +14,6 @@ navigation_home:
   en: "Brave Monkey home"
   de: "Brave Monkey Startseite"
   es: "Inicio de Brave Monkey"
-navigation_version:
-  en: "Prototype · BM3"
-  de: "Prototyp · BM3"
-  es: "Prototipo · BM3"
 hero_eyebrow:
   en: "One little questionnaire · One familiar alias"
   de: "Ein kleiner Fragebogen · Ein vertrauter Alias"
@@ -31,9 +27,9 @@ hero_heading_end:
   de: "Gleicher Alias."
   es: "Mismo alias."
 hero_description:
-  en: "Create a memorable pseudonym and a matching initials avatar. Come back, answer the same questions, and regenerate it—without creating an account here."
-  de: "Erstelle ein einprägsames Pseudonym mit einem passenden Initialen-Avatar. Kehre zurück, beantworte dieselben Fragen und erzeuge es erneut – ganz ohne Konto hier."
-  es: "Crea un seudónimo fácil de recordar y un avatar con sus iniciales. Vuelve, responde las mismas preguntas y genéralo de nuevo, sin crear una cuenta aquí."
+  en: "Brave Monkey creates a memorable alias, not secure credentials. If you forget it, answer the same questions again to regenerate the alias and initials avatar—no account needed."
+  de: "Brave Monkey erstellt einen einprägsamen Alias, keine sicheren Zugangsdaten. Wenn du ihn vergisst, beantworte dieselben Fragen erneut, um Alias und Initialen-Avatar ohne Konto wiederherzustellen."
+  es: "Brave Monkey crea un alias fácil de recordar, no credenciales seguras. Si lo olvidas, responde las mismas preguntas otra vez para regenerar el alias y el avatar de iniciales, sin cuenta."
 hero_create_alias:
   en: "Create my alias ↓"
   de: "Meinen Alias erstellen ↓"
@@ -58,10 +54,6 @@ sample_identity:
   en: "A sample identity"
   de: "Beispielidentität"
   es: "Una identidad de ejemplo"
-sample_not_password:
-  en: "Not a password"
-  de: "Kein Passwort"
-  es: "No es una contraseña"
 questions_title:
   en: "Your personal questions"
   de: "Deine persönlichen Fragen"
@@ -74,10 +66,6 @@ question_day_label:
   en: "Day of the month of your birthday"
   de: "Geburtstag (Tag des Monats)"
   es: "Día del mes de tu cumpleaños"
-question_day_placeholder:
-  en: "Select day"
-  de: "Tag auswählen"
-  es: "Selecciona el día"
 question_family_prefix:
   en: "First two letters of your family name"
   de: "Erste zwei Buchstaben deines Familiennamens"
@@ -174,10 +162,6 @@ result_title:
   en: "Your reproducible alias"
   de: "Dein reproduzierbarer Alias"
   es: "Tu alias reproducible"
-result_version_note:
-  en: "Version BM3 · This PIN is a public checksum, not a password."
-  de: "Version BM3 · Diese PIN ist eine öffentliche Prüfsumme, kein Passwort."
-  es: "Versión BM3 · Este PIN es una suma de verificación pública, no una contraseña."
 result_copy:
   en: "Copy alias + PIN"
   de: "Alias + PIN kopieren"
@@ -186,14 +170,6 @@ result_download:
   en: "Download SVG"
   de: "SVG herunterladen"
   es: "Descargar SVG"
-result_warning_title:
-  en: "⚠ Identity is not authentication."
-  de: "⚠ Identität ist keine Authentifizierung."
-  es: "⚠ La identidad no es autenticación."
-result_warning_text:
-  en: "Anyone can calculate the valid PIN for a known word pair. Do not use this three-part result as a login password or proof of account ownership. A destination platform needs a separate authentication method (for example, passkeys)."
-  de: "Jede Person kann die gültige PIN zu einem bekannten Wortpaar berechnen. Verwende dieses dreiteilige Ergebnis nicht als Anmeldepasswort oder als Nachweis der Kontoinhaberschaft. Eine Zielplattform benötigt eine separate Authentifizierungsmethode, zum Beispiel Passkeys."
-  es: "Cualquiera puede calcular el PIN válido de una pareja de palabras conocida. No uses este resultado de tres partes como contraseña de acceso ni como prueba de titularidad de una cuenta. La plataforma de destino necesita un método de autenticación independiente, por ejemplo, claves de acceso."
 result_repeat_note:
   en: "If you repeat every answer exactly, Brave Monkey will regenerate the same result. This page doesn't remember your answers after you leave."
   de: "Wenn du alle Antworten exakt wiederholst, erzeugt Brave Monkey dasselbe Ergebnis. Diese Seite merkt sich deine Antworten nicht, nachdem du sie verlassen hast."
@@ -215,9 +191,9 @@ how_title:
   de: "Deine Antworten werden zu einem Seed"
   es: "Tus respuestas se convierten en una semilla"
 how_description:
-  en: "A fixed set of answers is normalized and hashed locally with SHA-256. The hash selects an English adjective and noun. A public formula calculates a checksum PIN from those words, and a versioned SVG algorithm creates an avatar from their initials."
-  de: "Eine feste Menge von Antworten wird normalisiert und lokal mit SHA-256 gehasht. Der Hash wählt ein englisches Adjektiv und Substantiv aus. Eine öffentliche Formel berechnet aus diesen Wörtern eine PIN-Prüfsumme, und ein versionierter SVG-Algorithmus erstellt einen Avatar aus ihren Initialen."
-  es: "Un conjunto fijo de respuestas se normaliza y procesa localmente con SHA-256. El hash selecciona un adjetivo y un sustantivo en inglés. Una fórmula pública calcula un PIN de verificación a partir de esas palabras y un algoritmo SVG versionado crea un avatar con sus iniciales."
+  en: "Your answers are processed in this browser to select an English adjective and noun, calculate a PIN, and create an initials avatar. Repeat the same answers to get the same result."
+  de: "Deine Antworten werden in diesem Browser verarbeitet, um ein englisches Adjektiv und Substantiv auszuwählen, eine PIN zu berechnen und einen Initialen-Avatar zu erstellen. Mit denselben Antworten erhältst du dasselbe Ergebnis."
+  es: "Tus respuestas se procesan en este navegador para elegir un adjetivo y un sustantivo en inglés, calcular un PIN y crear un avatar con sus iniciales. Repite las mismas respuestas para obtener el mismo resultado."
 how_deterministic:
   en: "Deterministic"
   de: "Deterministisch"
@@ -227,17 +203,17 @@ how_no_registration:
   de: "Keine Registrierung"
   es: "Sin registro"
 validator_eyebrow:
-  en: "Independent checksum"
-  de: "Unabhängige Prüfsumme"
-  es: "Verificación independiente"
+  en: "PIN helper"
+  de: "PIN-Hilfe"
+  es: "Ayuda para el PIN"
 validator_title:
   en: "Does the PIN match?"
   de: "Stimmt die PIN?"
   es: "¿Coincide el PIN?"
 validator_description:
-  en: "Recalculate a PIN from an adjective and noun without knowing the questionnaire answers."
-  de: "Berechne eine PIN aus Adjektiv und Substantiv neu, ohne die Antworten auf den Fragebogen zu kennen."
-  es: "Vuelve a calcular un PIN a partir de un adjetivo y un sustantivo sin conocer las respuestas al cuestionario."
+  en: "Check whether a PIN matches an adjective and noun—no questionnaire answers needed."
+  de: "Prüfe, ob eine PIN zu einem Adjektiv und Substantiv passt – ohne Antworten auf den Fragebogen."
+  es: "Comprueba si un PIN coincide con un adjetivo y un sustantivo, sin necesitar las respuestas del cuestionario."
 validator_adjective:
   en: "Adjective"
   de: "Adjektiv"
@@ -267,33 +243,45 @@ validator_input_error:
   de: "Gib ein Adjektiv, ein Substantiv und eine sechsstellige PIN ein."
   es: "Escribe un adjetivo, un sustantivo y un PIN de seis dígitos."
 validator_button:
-  en: "Validate BM3 checksum"
-  de: "BM3-Prüfsumme prüfen"
-  es: "Validar suma de verificación BM3"
+  en: "Check PIN"
+  de: "PIN prüfen"
+  es: "Comprobar PIN"
 validator_checking:
   en: "Checking…"
   de: "Wird geprüft…"
   es: "Comprobando…"
 validator_matches:
-  en: "✓ Matches the BM3 public checksum. This does not authenticate a person."
-  de: "✓ Stimmt mit der öffentlichen BM3-Prüfsumme überein. Dies authentifiziert keine Person."
-  es: "✓ Coincide con la suma de verificación pública de BM3. Esto no autentica a ninguna persona."
+  en: "✓ This PIN matches the word pair."
+  de: "✓ Diese PIN passt zum Wortpaar."
+  es: "✓ Este PIN coincide con la pareja de palabras."
 validator_no_match:
-  en: "✕ PIN does not match this BM3 word pair, or a word is not in the dictionary."
-  de: "✕ Die PIN stimmt nicht mit diesem BM3-Wortpaar überein oder ein Wort ist nicht im Wörterbuch."
-  es: "✕ El PIN no coincide con esta pareja de palabras BM3 o una palabra no está en el diccionario."
+  en: "✕ PIN does not match this word pair, or a word is not in the dictionary."
+  de: "✕ Die PIN stimmt nicht mit diesem Wortpaar überein oder ein Wort ist nicht im Wörterbuch."
+  es: "✕ El PIN no coincide con esta pareja de palabras o una palabra no está en el diccionario."
 validator_failure:
   en: "Couldn't check the PIN. Use a secure HTTPS or localhost context."
   de: "Die PIN konnte nicht geprüft werden. Verwende eine sichere HTTPS- oder localhost-Verbindung."
   es: "No se pudo comprobar el PIN. Usa una conexión segura HTTPS o localhost."
+open_source_title:
+  en: "Open source: build on this project"
+  de: "Open Source: Nutze dieses Projekt als Grundlage"
+  es: "Código abierto: construye sobre este proyecto"
+open_source_description:
+  en: "Brave Monkey is a static site hosted on GitHub Pages: no application server receives your answers; calculations run in your browser. This reduces server-side exposure, though your browser, host/CDN, and extensions can still process ordinary page and network metadata. The source is public to inspect, so the algorithm is not secret—and the alias/PIN are not secure credentials."
+  de: "Brave Monkey ist eine statische, auf GitHub Pages gehostete Seite: Kein Anwendungsserver empfängt deine Antworten; die Berechnungen laufen in deinem Browser. Das verringert die serverseitige Gefährdung, allerdings können dein Browser, Hosting- und CDN-Anbieter sowie Erweiterungen weiterhin übliche Seiten- und Netzwerkmetadaten verarbeiten. Der Quellcode ist öffentlich einsehbar, der Algorithmus also kein Geheimnis – und Alias/PIN sind keine sicheren Zugangsdaten."
+  es: "Brave Monkey es un sitio estático alojado en GitHub Pages: ningún servidor de aplicación recibe tus respuestas; los cálculos se realizan en tu navegador. Esto reduce la exposición en el servidor, aunque tu navegador, el proveedor de alojamiento/CDN y las extensiones aún pueden procesar metadatos habituales de la página y la red. El código fuente es público y puedes inspeccionarlo, así que el algoritmo no es secreto; el alias/PIN no son credenciales seguras."
+open_source_link:
+  en: "Explore the source on GitHub ↗"
+  de: "Quellcode auf GitHub ansehen ↗"
+  es: "Explorar el código en GitHub ↗"
 footer_copyright:
-  en: "© Brave Monkey · Prototype"
-  de: "© Brave Monkey · Prototyp"
-  es: "© Brave Monkey · Prototipo"
+  en: "© Brave Monkey · This is an idea of vr4content.com"
+  de: "© Brave Monkey · Eine Idee von vr4content.com"
+  es: "© Brave Monkey · Una idea de vr4content.com"
 footer_notice:
-  en: "All calculations happen in your browser · Not a secure login system"
-  de: "Alle Berechnungen erfolgen in deinem Browser · Kein sicheres Anmeldesystem"
-  es: "Todos los cálculos se realizan en tu navegador · No es un sistema de acceso seguro"
+  en: "All calculations happen in your browser · Same answers, same alias"
+  de: "Alle Berechnungen erfolgen in deinem Browser · Gleiche Antworten, gleicher Alias"
+  es: "Todos los cálculos se realizan en tu navegador · Mismas respuestas, mismo alias"
 catalog_error:
   en: "Couldn't load the English word catalog. Serve this site from localhost or HTTPS, then reload."
   de: "Der englische Wortkatalog konnte nicht geladen werden. Stelle die Seite über localhost oder HTTPS bereit und lade sie erneut."
@@ -311,33 +299,45 @@ contact_card_title:
   de: "Speichere deine Identität"
   es: "Guarda tu identidad"
 contact_card_description:
-  en: "Download or print this card. The QR opens a contact-download page; generate final cards from the hosted site so phones can reach it."
-  de: "Lade diese Karte herunter oder drucke sie. Der QR-Code öffnet eine Downloadseite für den Kontakt. Erstelle endgültige Karten auf der gehosteten Website, damit Telefone die Seite erreichen können."
-  es: "Descarga o imprime esta tarjeta. El QR abre una página para descargar el contacto; genera las tarjetas finales desde el sitio publicado para que los teléfonos puedan abrirla."
+  en: "Scan the QR to add your contact, or choose a download option below."
+  de: "Scanne den QR-Code, um deinen Kontakt hinzuzufügen, oder wähle unten eine Downloadoption."
+  es: "Escanea el QR para añadir el contacto o elige una opción de descarga más abajo."
 contact_card_aria:
-  en: "Brave Monkey BM3 identity contact card"
-  de: "Brave Monkey BM3-Identitätskontaktkarte"
-  es: "Tarjeta de contacto de identidad Brave Monkey BM3"
-contact_card_edition:
-  en: "BM3 identity card"
-  de: "BM3-Identitätskarte"
-  es: "Tarjeta de identidad BM3"
-contact_card_pin_notice:
-  en: "Public checksum — not a password."
-  de: "Öffentliche Prüfsumme — kein Passwort."
-  es: "Suma de verificación pública — no es una contraseña."
+  en: "Brave Monkey contact card"
+  de: "Brave-Monkey-Kontaktkarte"
+  es: "Tarjeta de contacto de Brave Monkey"
 contact_card_qr_aria:
-  en: "QR link to the Brave Monkey contact download page"
-  de: "QR-Code-Link zur Downloadseite des Brave-Monkey-Kontakts"
-  es: "Enlace QR a la página de descarga del contacto de Brave Monkey"
+  en: "Direct vCard QR code to add this contact"
+  de: "Direkter vCard-QR-Code zum Hinzufügen dieses Kontakts"
+  es: "Código QR vCard directo para añadir este contacto"
 contact_card_scan:
-  en: "Scan to download contact"
-  de: "Scannen, um den Kontakt herunterzuladen"
-  es: "Escanea para descargar el contacto"
+  en: "Scan with your phone"
+  de: "Mit dem Smartphone scannen"
+  es: "Escanea con tu móvil"
+contact_card_scan_help:
+  en: "Open your camera, point it at the QR code, then tap the contact prompt."
+  de: "Öffne die Kamera, richte sie auf den QR-Code und tippe dann auf den Kontakt-Hinweis."
+  es: "Abre la cámara, apunta al código QR y toca el aviso del contacto."
+contact_card_scan_step_1:
+  en: "Open your camera and point to the QRCode"
+  de: "Öffne die Kamera und richte sie auf den QR-Code"
+  es: "Abre la cámara y apunta al código QR"
+contact_card_scan_step_2:
+  en: "Tap the contact prompt"
+  de: "Tippe auf den Kontakt-Hinweis"
+  es: "Toca el aviso del contacto"
+contact_card_scan_step_3:
+  en: "Save the contact in your phone contact list"
+  de: "Speichere den Kontakt in der Kontaktliste deines Telefons"
+  es: "Guarda el contacto en la lista de contactos de tu teléfono"
+contact_card_scan_caption:
+  en: "Scan to add contact"
+  de: "Scannen, um den Kontakt hinzuzufügen"
+  es: "Escanea para añadir el contacto"
 contact_card_privacy:
-  en: "The QR link carries only your alias, PIN, and interface language in its URL fragment; the fragment is not sent in the page request. It includes no answers, email, or phone number. The site must be online for the download page to work. Your phone may sync saved contacts to a cloud account."
-  de: "Der QR-Code enthält nur deinen Alias, deine PIN und die Oberflächensprache im URL-Fragment; dieses Fragment wird nicht mit der Seitenanfrage gesendet. Er enthält keine Antworten, E-Mail-Adresse oder Telefonnummer. Die Website muss online sein, damit die Downloadseite funktioniert. Dein Telefon kann gespeicherte Kontakte mit einem Cloud-Konto synchronisieren."
-  es: "El enlace QR solo lleva tu alias, PIN e idioma de la interfaz en el fragmento de la URL; ese fragmento no se envía con la solicitud de la página. No incluye respuestas, correo electrónico ni teléfono. El sitio debe estar en línea para que funcione la descarga. Tu teléfono podría sincronizar los contactos guardados con la nube."
+  en: "The contact includes your alias, vr4content, website, and PIN. Questionnaire answers, email, and phone numbers are not included. Your phone may sync saved contacts to a cloud account."
+  de: "Der Kontakt enthält deinen Alias, vr4content, die Website und die PIN. Antworten auf den Fragebogen, E-Mail-Adressen und Telefonnummern sind nicht enthalten. Dein Telefon kann gespeicherte Kontakte mit einem Cloud-Konto synchronisieren."
+  es: "El contacto incluye tu alias, vr4content, el sitio web y el PIN. No contiene respuestas del cuestionario, correo electrónico ni teléfonos. Tu teléfono podría sincronizar los contactos guardados con la nube."
 contact_card_download_png:
   en: "Download image (PNG)"
   de: "Bild herunterladen (PNG)"
@@ -351,16 +351,16 @@ contact_card_download_vcard:
   de: "Kontakt herunterladen (.vcf)"
   es: "Descargar contacto (.vcf)"
 contact_card_ready:
-  en: "Contact link is ready. Scan to open the download page, then download and open the .vcf file."
-  de: "Der Kontaktlink ist bereit. Scanne ihn, um die Downloadseite zu öffnen, und lade dann die .vcf-Datei herunter und öffne sie."
-  es: "El enlace del contacto está listo. Escanéalo para abrir la página de descarga; después descarga y abre el archivo .vcf."
+  en: "Your contact QR is ready. Scan it with your phone to add the contact."
+  de: "Dein Kontakt-QR-Code ist bereit. Scanne ihn mit deinem Smartphone, um den Kontakt hinzuzufügen."
+  es: "El QR de tu contacto está listo. Escanéalo con el móvil para añadirlo."
 contact_card_png_working:
   en: "Preparing your card image…"
   de: "Dein Kartenbild wird vorbereitet…"
   es: "Preparando la imagen de tu tarjeta…"
 contact_card_png_done:
   en: "PNG identity card downloaded."
-  de: "BM3-Identitätskarte als PNG heruntergeladen."
+  de: "Identitätskarte als PNG heruntergeladen."
   es: "Tarjeta de identidad PNG descargada."
 contact_card_png_error:
   en: "Could not create the PNG card. Try again or use Print."
@@ -378,39 +378,3 @@ contact_card_qr_error:
   en: "The contact QR could not be generated. You can still download the .vcf contact file or reload and try again."
   de: "Der Kontakt-QR-Code konnte nicht erstellt werden. Du kannst weiterhin die .vcf-Kontaktdatei herunterladen oder die Seite neu laden."
   es: "No se pudo generar el QR del contacto. Aún puedes descargar el archivo de contacto .vcf o recargar la página."
-contact_import_page_title:
-  en: "Brave Monkey · Add this contact"
-  de: "Brave Monkey · Diesen Kontakt hinzufügen"
-  es: "Brave Monkey · Añadir este contacto"
-contact_import_meta_description:
-  en: "Download a Brave Monkey contact with its PIN note."
-  de: "Lade einen Brave-Monkey-Kontakt mit PIN-Notiz herunter."
-  es: "Descarga un contacto de Brave Monkey con la nota del PIN."
-contact_import_title:
-  en: "Save this contact"
-  de: "Diesen Kontakt speichern"
-  es: "Guardar este contacto"
-contact_import_description:
-  en: "Download the contact file, then open it to add the alias and PIN to your phone's contacts."
-  de: "Lade die Kontaktdatei herunter und öffne sie, um Alias und PIN zu deinen Telefonkontakten hinzuzufügen."
-  es: "Descarga el archivo de contacto y ábrelo para añadir el alias y el PIN a los contactos del teléfono."
-contact_import_company:
-  en: "Company: Brave Monkey"
-  de: "Unternehmen: Brave Monkey"
-  es: "Empresa: Brave Monkey"
-contact_import_instructions:
-  en: "After downloading, open the .vcf file and choose Add to Contacts. The Note contains the PIN."
-  de: "Öffne nach dem Herunterladen die .vcf-Datei und wähle Zu Kontakten hinzufügen. Die Notiz enthält die PIN."
-  es: "Después de descargarlo, abre el archivo .vcf y selecciona Añadir a contactos. La nota contiene el PIN."
-contact_import_privacy:
-  en: "The contact contains only your alias, Brave Monkey as the company, and PIN—no answers, email, or phone number. Your phone may sync saved contacts to a cloud account."
-  de: "Der Kontakt enthält nur deinen Alias, Brave Monkey als Unternehmen und die PIN – keine Antworten, E-Mail-Adresse oder Telefonnummer. Dein Telefon kann gespeicherte Kontakte mit einem Cloud-Konto synchronisieren."
-  es: "El contacto solo contiene tu alias, Brave Monkey como empresa y el PIN; no incluye respuestas, correo electrónico ni teléfono. Tu teléfono podría sincronizar los contactos guardados con la nube."
-contact_import_error:
-  en: "This contact link is incomplete or invalid. Scan the QR code again from the card."
-  de: "Dieser Kontaktlink ist unvollständig oder ungültig. Scanne den QR-Code auf der Karte erneut."
-  es: "Este enlace de contacto está incompleto o no es válido. Vuelve a escanear el QR de la tarjeta."
-contact_import_home:
-  en: "Return to Brave Monkey"
-  de: "Zurück zu Brave Monkey"
-  es: "Volver a Brave Monkey"
