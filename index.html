@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f8faf8">
   <meta name="referrer" content="no-referrer">
-  <meta name="description" content="BraveMonkey: regenerate an English adjective-noun pseudonym from memorable answers. Stateless, open and browser-only.">
-  <title>BraveMonkey · Same answers, same alias</title>
+  <meta name="description" content="Brave Monkey: regenerate an English adjective–noun pseudonym from memorable answers. Stateless, open and browser-only." data-i18n-attribute="content:page_description">
+  <title>Brave Monkey · Same answers, same alias</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <style>
     :root{--bm-ink:#16352e;--bm-muted:#5b6b65;--bm-leaf:#1c7160;--bm-warm:#ffac65;--bm-paper:#f8faf8;--bm-border:#dbe6df}
     html{scroll-behavior:smooth}
     body{background:var(--bm-paper);color:var(--bm-ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
     .navbar{background:#f8faf8e8;backdrop-filter:blur(14px);border-bottom:1px solid var(--bm-border)}
+    .language-select{width:auto;min-width:6.5rem}
     .brand-icon{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:13px;background:#fce6d1;font-size:24px}
     .brand-word{font-weight:850;letter-spacing:-.06em;color:var(--bm-ink)}
     .hero{background:radial-gradient(circle at 86% 8%,#e7f9d9 0,transparent 36%),radial-gradient(circle at 0% 100%,#ffebd6 0,transparent 30%),linear-gradient(135deg,#f8faf8,#eef9f3);border:1px solid var(--bm-border);border-radius:28px;padding:clamp(24px,5vw,60px);overflow:hidden}
@@ -38,295 +39,118 @@
     .alias{font-size:clamp(1.6rem,3.4vw,2.6rem);font-weight:800;letter-spacing:-.045em}
     .pin-box{font-variant-numeric:tabular-nums;font-size:1.5rem;letter-spacing:.18em;font-weight:800}
     .result-subtitle{color:#d0e8df}
+    .identity-contact-card{display:grid;grid-template-columns:92px minmax(0,1fr) 148px;grid-template-rows:auto 1fr;align-items:center;gap:16px;width:100%;max-width:780px;min-height:280px;aspect-ratio:1.586;padding:24px;background:linear-gradient(135deg,#fff,#f4faf7);color:var(--bm-ink);border:1px solid var(--bm-border);border-radius:20px;box-shadow:0 10px 30px #19352d10}
+    .contact-card-brand{grid-column:1/-1;display:flex;align-items:center;gap:12px}
+    .contact-card-brand-icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:13px;background:#fce6d1;font-size:26px}
+    .contact-card-brand-title{font-size:1.1rem;font-weight:850;letter-spacing:-.04em}
+    .contact-card-edition{font-size:.75rem;color:var(--bm-muted)}
+    .contact-card-avatar{width:92px;height:92px;overflow:hidden;border-radius:15px}
+    .contact-card-avatar svg{display:block;width:100%;height:100%}
+    .contact-card-alias{font-size:clamp(1.1rem,3.5vw,1.9rem);font-weight:850;line-height:1.1;overflow-wrap:anywhere}
+    .contact-card-pin{font-size:clamp(1rem,2.7vw,1.35rem);font-weight:800;letter-spacing:.05em;font-variant-numeric:tabular-nums;margin-top:.45rem}
+    .contact-card-notice{font-size:.72rem;color:var(--bm-muted);margin:.35rem 0 0}
+    .contact-card-qr-block{justify-self:end;text-align:center;font-size:.68rem;color:var(--bm-muted)}
+    .contact-qr{display:inline-block;padding:11px;background:#fff;border:1px solid #e4ebe6;border-radius:10px;line-height:0}
+    .contact-qr canvas,.contact-qr img{width:120px!important;height:120px!important;image-rendering:pixelated}
+    .contact-card-actions{display:flex;flex-wrap:wrap;gap:.5rem}
+    @media (max-width:575px){.identity-contact-card{grid-template-columns:60px minmax(0,1fr) 94px;gap:9px;padding:12px;min-height:0;aspect-ratio:auto}.contact-card-brand-icon{width:34px;height:34px;font-size:21px}.contact-card-avatar{width:60px;height:60px}.contact-qr{padding:7px}.contact-qr canvas,.contact-qr img{width:78px!important;height:78px!important}}
     .warning{background:#fff6e8;border:1px solid #efdbad;color:#6a5028;border-radius:15px;padding:14px 16px}
     .footer{font-size:.9rem;color:#5b6b65}
     :focus-visible{outline:3px solid #ffa953;outline-offset:3px}
     @media (max-width:575px){.hero{border-radius:18px}.card-lite{border-radius:18px}.hero-preview{max-width:200px;transform:none}.hero-preview .emoji{font-size:55px}}
     @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+    @media print{
+      @page{size:85.6mm 54mm;margin:0}
+      html,body{width:85.6mm;height:54mm;margin:0!important;background:#fff!important}
+      body *{visibility:hidden!important}
+      #contactCard,#contactCard *{visibility:visible!important}
+      #contactCard{position:fixed!important;left:0!important;top:0!important;z-index:9999;width:85.6mm!important;height:54mm!important;min-height:0!important;max-width:none!important;aspect-ratio:auto!important;padding:3mm!important;grid-template-columns:19mm minmax(0,1fr) 25mm!important;grid-template-rows:7mm 1fr!important;gap:1mm!important;border:0!important;border-radius:0!important;box-shadow:none!important;overflow:hidden!important}
+      .contact-card-brand{gap:2mm!important}.contact-card-brand-icon{width:6mm!important;height:6mm!important;font-size:10pt!important;border-radius:2mm!important}.contact-card-brand-title{font-size:9pt!important}.contact-card-edition{font-size:5pt!important}
+      .contact-card-avatar{width:18mm!important;height:18mm!important;border-radius:2mm!important}.contact-card-alias{font-size:11pt!important;line-height:1.05!important}.contact-card-pin{font-size:9pt!important;letter-spacing:.02em!important;margin-top:1mm!important}.contact-card-notice{font-size:5pt!important;line-height:1.1!important;margin-top:1mm!important}.contact-card-qr-block{font-size:5pt!important;line-height:1.1!important}.contact-qr{padding:2mm!important;border:0!important;border-radius:0!important}.contact-qr canvas,.contact-qr img{width:19mm!important;height:19mm!important}
+    }
     [hidden]{display:none!important}
   </style>
 </head>
 <body>
-  <nav class="navbar sticky-top py-3"><div class="container d-flex justify-content-between align-items-center">
-    <a class="text-decoration-none d-flex gap-2 align-items-center" href="#top" aria-label="BraveMonkey home"><span class="brand-icon" aria-hidden="true">🐒</span><span class="brand-word fs-4">BraveMonkey</span></a>
-    <span class="pill">Prototype · BM2</span>
+  <nav class="navbar sticky-top py-3"><div class="container d-flex justify-content-between align-items-center gap-3">
+    <a class="text-decoration-none d-flex gap-2 align-items-center" href="#top" aria-label="Brave Monkey home" data-i18n-aria-label="navigation_home"><span class="brand-icon" aria-hidden="true">🐒</span><span class="brand-word fs-4">Brave Monkey</span></a>
+    <div class="d-flex align-items-center gap-2">
+      <label class="visually-hidden" for="languageSelect" data-i18n="language_label">Interface language</label>
+      <select id="languageSelect" class="form-select form-select-sm language-select" aria-label="Interface language" data-i18n-aria-label="language_label" disabled>
+        <option value="en">English</option><option value="de">Deutsch</option><option value="es">Español</option>
+      </select>
+      <span class="pill d-none d-sm-inline-block" data-i18n="navigation_version">Prototype · BM3</span>
+    </div>
   </div></nav>
   <main id="top" class="container py-4 py-lg-5">
     <section class="hero mb-4 mb-lg-5">
       <div class="row align-items-center gy-4">
         <div class="col-lg-7">
-          <div class="eyebrow mb-3">One little questionnaire · One familiar alias</div>
-          <h1>Same answers.<br><span style="color:#208767">Same alias.</span></h1>
-          <p class="lead mt-3 mb-4">Create a memorable pseudonym and a matching SVG icon. Come back, answer the same questions, and regenerate it—without creating an account here.</p>
-          <a class="btn btn-forest btn-lg me-2 mb-2" href="#questionnaire">Create my alias ↓</a>
-          <a class="btn btn-light-line btn-lg mb-2" href="#validator">Check a PIN</a>
-          <div class="mt-3 d-flex flex-wrap gap-2"><span class="pill">No generator database</span><span class="pill">Runs in your browser</span><span class="pill">Free SVG download</span></div>
+          <div class="eyebrow mb-3" data-i18n="hero_eyebrow">One little questionnaire · One familiar alias</div>
+          <h1><span data-i18n="hero_heading_start">Same answers.</span><br><span style="color:#208767" data-i18n="hero_heading_end">Same alias.</span></h1>
+          <p class="lead mt-3 mb-4" data-i18n="hero_description">Create a memorable pseudonym and a matching initials avatar. Come back, answer the same questions, and regenerate it—without creating an account here.</p>
+          <a class="btn btn-forest btn-lg me-2 mb-2" href="#questionnaire" data-i18n="hero_create_alias">Create my alias ↓</a>
+          <a class="btn btn-light-line btn-lg mb-2" href="#validator" data-i18n="hero_check_pin">Check a PIN</a>
+          <div class="mt-3 d-flex flex-wrap gap-2"><span class="pill" data-i18n="badge_no_database">No generator database</span><span class="pill" data-i18n="badge_browser">Runs in your browser</span><span class="pill" data-i18n="badge_svg">Free SVG download</span></div>
         </div>
-        <div class="col-lg-5"><div class="hero-preview" aria-hidden="true"><div class="emoji">🐒</div><div class="fw-bold fs-3">BRAVE MONKEY</div><div class="text-muted-strong">A sample identity</div><span class="badge text-bg-light mt-2 border">Not a password</span></div></div>
+        <div class="col-lg-5"><div class="hero-preview" aria-hidden="true"><div class="emoji">🐒</div><div class="fw-bold fs-3">BRAVE MONKEY</div><div class="text-muted-strong" data-i18n="sample_identity">A sample identity</div><span class="badge text-bg-light mt-2 border" data-i18n="sample_not_password">Not a password</span></div></div>
       </div>
     </section>
     <div class="row g-4 align-items-start">
       <div class="col-lg-8">
-        <form id="questionnaire" class="d-grid gap-4" autocomplete="off">
+        <form id="questionnaire" class="d-grid gap-4" autocomplete="off" novalidate>
           <section class="card-lite p-4">
-            <div class="d-flex gap-3 mb-4"><span class="section-tag">1</span><div><h2 class="h4 fw-bold mb-1">A few stable facts</h2><p class="text-muted-strong mb-0">Select only initials. We don't ask you to type full names.</p></div></div>
+            <div class="d-flex gap-3 mb-4"><span class="section-tag">1</span><div><h2 class="h4 fw-bold mb-1" data-i18n="questions_title">Your personal questions</h2><p class="text-muted-strong mb-0" data-i18n="questions_description">Answer consistently each time. Enter exactly two letters in every letter field.</p></div></div>
             <div class="row g-3">
-              <div class="col-sm-6"><label class="form-label" for="birthdayDay">Day of birth</label><select class="form-select" id="birthdayDay" required><option value="">Select day</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="birthdayMonth">Month of birth</label><select class="form-select" id="birthdayMonth" required><option value="">Select month</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="surnameInitial">First letter of your family name</label><select class="form-select" id="surnameInitial" required><option value="">Select letter</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="cityInitial">First letter of city of birth</label><select class="form-select" id="cityInitial" required><option value="">Select letter</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="fatherInitial">First letter of father's first name</label><select class="form-select" id="fatherInitial" required><option value="">Select letter / unknown</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="motherInitial">First letter of mother's first name</label><select class="form-select" id="motherInitial" required><option value="">Select letter / unknown</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="siblings">How many siblings did you grow up with?</label><select class="form-select" id="siblings" required><option value="">Select answer</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4PLUS">4 or more</option></select></div>
+              <div class="col-sm-6"><label class="form-label" for="birthdayDay" data-i18n="question_day_label">Day of the month of your birthday</label><select class="form-select" id="birthdayDay" required aria-describedby="birthdayDayError"><option value="" data-i18n="question_day_placeholder">Select day</option></select><div id="birthdayDayError" class="invalid-feedback" data-i18n="error_day">Choose a day from 01 to 31.</div></div>
+              <div class="col-sm-6"><label class="form-label" for="familyPrefix" data-i18n="question_family_prefix">First two letters of your family name</label><input class="form-control unicode-prefix" id="familyPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint familyPrefixError"><div id="familyPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
+              <div class="col-sm-6"><label class="form-label" for="fatherPrefix" data-i18n="question_father_prefix">First two letters of your father's first name</label><input class="form-control unicode-prefix" id="fatherPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint fatherPrefixError"><div id="fatherPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
+              <div class="col-sm-6"><label class="form-label" for="motherPrefix" data-i18n="question_mother_prefix">First two letters of your mother's first name</label><input class="form-control unicode-prefix" id="motherPrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint motherPrefixError"><div id="motherPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
+              <div class="col-sm-6"><label class="form-label" for="birthplacePrefix" data-i18n="question_birthplace_prefix">First two letters of your place of birth</label><input class="form-control unicode-prefix" id="birthplacePrefix" type="text" required autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint birthplacePrefixError"><div id="birthplacePrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
+              <div class="col-sm-6"><label class="form-label" for="siblings" data-i18n="question_siblings">How many siblings did you grow up with?</label><select class="form-select" id="siblings" required aria-describedby="siblingsError"><option value="" data-i18n="question_select_answer">Select an answer</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4PLUS" data-i18n="question_siblings_four_plus">4 or more</option></select><div id="siblingsError" class="invalid-feedback" data-i18n="error_siblings">Choose a sibling-count option.</div></div>
+              <div class="col-sm-6"><label class="form-label" for="hadPet" data-i18n="question_had_pet">Have you ever had a pet?</label><select class="form-select" id="hadPet" required aria-describedby="hadPetError"><option value="" data-i18n="question_select_answer">Select an answer</option><option value="YES" data-i18n="option_yes">Yes</option><option value="NO" data-i18n="option_no">No</option></select><div id="hadPetError" class="invalid-feedback" data-i18n="error_pet_choice">Choose Yes or No.</div></div>
+              <div class="col-sm-6" id="petPrefixGroup" hidden><label class="form-label" for="petPrefix" data-i18n="question_pet_prefix">First two letters of your first pet's name</label><input class="form-control unicode-prefix" id="petPrefix" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="lettersHint petPrefixError"><div id="petPrefixError" class="invalid-feedback" data-i18n="error_two_letters">Enter exactly two Unicode letters, with no spaces or punctuation.</div></div>
             </div>
-            <p class="small text-muted-strong mt-3 mb-0">Use the same interpretation every time. If a parent's name is unknown or inapplicable, choose “Unknown”.</p>
-          </section>
-          <section class="card-lite p-4">
-            <div class="d-flex gap-3 mb-4"><span class="section-tag">2</span><div><h2 class="h4 fw-bold mb-1">Your color and pet memories</h2><p class="text-muted-strong mb-0">Remember the original choice—not today's changing favorite.</p></div></div>
-            <div class="row g-3">
-              <div class="col-sm-6"><label class="form-label" for="color1">First preferred color</label><select class="form-select" id="color1" required><option value="">Choose one</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="color2">Second preferred color</label><select class="form-select" id="color2" required><option value="">Choose a different color</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="hadPet">Have you ever had a pet?</label><select class="form-select" id="hadPet" required><option value="">Choose one</option><option value="YES">Yes</option><option value="NO">No</option></select></div>
-              <div class="col-sm-6" id="petInitialGroup" hidden><label class="form-label" for="petInitial">First letter of your FIRST pet's name</label><select class="form-select" id="petInitial"><option value="">Select letter / unknown</option></select></div>
-            </div>
-            <p class="small text-muted-strong mt-3 mb-0">For pets, always think of the first pet you personally considered yours.</p>
-          </section>
-          <section class="card-lite p-4">
-            <div class="d-flex gap-3 mb-4"><span class="section-tag">3</span><div><h2 class="h4 fw-bold mb-1">Choose your secret-ish symbols</h2><p class="text-muted-strong mb-0">These are memorable preferences, not secure secrets.</p></div></div>
-            <div class="row g-3">
-              <div class="col-sm-12"><label class="form-label" for="personalSymbol">Your personal symbol</label><select class="form-select" id="personalSymbol" required><option value="">Choose a symbol</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="icon1">First symbol in your pair</label><select class="form-select" id="icon1" required><option value="">Choose first</option></select></div>
-              <div class="col-sm-6"><label class="form-label" for="icon2">Second symbol in your pair</label><select class="form-select" id="icon2" required><option value="">Choose second</option></select></div>
-            </div>
-            <div class="privacy-note small mt-4">🔒 <strong>Local processing:</strong> Your answers are used in this browser tab to derive an alias. The app does not submit them to a server or save them to local storage. Your browser, hosting/CDN providers, or extensions may still process ordinary webpage metadata.</div>
+            <p id="lettersHint" class="small text-muted-strong mt-3 mb-0" data-i18n="question_letters_hint">Use exactly two letters. Accents and other Unicode letters are supported; do not enter spaces or punctuation.</p>
+            <div class="privacy-note small mt-4"><span aria-hidden="true">🔒 </span><strong data-i18n="privacy_label">Local processing:</strong> <span data-i18n="privacy_text">Your answers are used only in this browser tab to derive an alias. They are not sent to a server or saved in local storage.</span></div>
             <div id="formError" class="alert alert-danger mt-3" role="alert" hidden></div>
-            <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 mt-4"><div id="catalogStatus" class="small text-muted-strong" role="status" aria-live="polite">Loading English word catalog…</div><button id="generateBtn" type="submit" class="btn btn-forest btn-lg" disabled>Generate my alias ✦</button></div>
+            <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between gap-3 mt-4"><div id="catalogStatus" class="small text-muted-strong" role="status" aria-live="polite" data-i18n="catalog_loading">Loading English word catalog…</div><button id="generateBtn" type="submit" class="btn btn-forest btn-lg" disabled data-i18n="generate_button">Generate my alias ✦</button></div>
           </section>
         </form>
         <section id="resultSection" class="mt-4" hidden aria-live="polite" tabindex="-1">
           <div class="result-card"><div class="row align-items-center g-4">
             <div class="col-sm-5 text-center"><div id="svgPreview" class="identity-icon"></div></div>
-            <div class="col-sm-7"><p class="text-uppercase small fw-bold result-subtitle mb-2">Your reproducible alias</p><h2 id="resultAlias" class="alias mb-2"></h2><div class="pin-box" id="resultPin"></div><p class="result-subtitle mt-2">Version BM2 · This PIN is a public checksum, not a password.</p><div class="d-flex gap-2 flex-wrap"><button type="button" class="btn btn-light btn-sm fw-bold" id="copyBtn">Copy alias + PIN</button><button type="button" class="btn btn-outline-light btn-sm fw-bold" id="downloadBtn">Download SVG</button></div><div id="actionNotice" class="small mt-2" aria-live="polite"></div></div>
+            <div class="col-sm-7"><p class="text-uppercase small fw-bold result-subtitle mb-2" data-i18n="result_title">Your reproducible alias</p><h2 id="resultAlias" class="alias mb-2"></h2><div class="pin-box" id="resultPin"></div><p class="result-subtitle mt-2" data-i18n="result_version_note">Version BM3 · This PIN is a public checksum, not a password.</p><div class="d-flex gap-2 flex-wrap"><button type="button" class="btn btn-light btn-sm fw-bold" id="copyBtn" data-i18n="result_copy">Copy alias + PIN</button><button type="button" class="btn btn-outline-light btn-sm fw-bold" id="downloadBtn" data-i18n="result_download">Download SVG</button></div><div id="actionNotice" class="small mt-2" aria-live="polite"></div></div>
           </div></div>
-          <div class="warning mt-3"><strong>⚠ Identity is not authentication.</strong> Anyone can calculate the valid PIN for a known word pair. Do not use this three-part result as a login password or proof of account ownership. A destination platform needs a separate authentication method (for example, passkeys).</div>
-          <p class="small mt-3 text-muted-strong">If you repeat every answer exactly, BraveMonkey will regenerate the same result. This page doesn't remember your answers after you leave.</p>
+          <div class="warning mt-3"><strong data-i18n="result_warning_title">⚠ Identity is not authentication.</strong> <span data-i18n="result_warning_text">Anyone can calculate the valid PIN for a known word pair. Do not use this three-part result as a login password or proof of account ownership. A destination platform needs a separate authentication method (for example, passkeys).</span></div>
+          <p class="small mt-3 text-muted-strong" data-i18n="result_repeat_note">If you repeat every answer exactly, Brave Monkey will regenerate the same result. This page doesn't remember your answers after you leave.</p>
+          <section id="contactCardPanel" class="card-lite p-4 mt-4" aria-labelledby="contactCardTitle">
+            <h3 id="contactCardTitle" class="h5 fw-bold" data-i18n="contact_card_title">Save your identity</h3>
+            <p class="small text-muted-strong" data-i18n="contact_card_description">Download or print this card. The QR opens a contact-download page; generate final cards from the hosted site so phones can reach it.</p>
+            <article id="contactCard" class="identity-contact-card" aria-label="Brave Monkey BM3 contact card" data-i18n-aria-label="contact_card_aria">
+              <div class="contact-card-brand"><span class="contact-card-brand-icon" aria-hidden="true">🐒</span><div><div class="contact-card-brand-title">Brave Monkey</div><div class="contact-card-edition" data-i18n="contact_card_edition">BM3 identity card</div></div></div>
+              <div id="contactCardAvatar" class="contact-card-avatar"></div>
+              <div class="contact-card-details"><div id="contactCardAlias" class="contact-card-alias"></div><div id="contactCardPin" class="contact-card-pin">PIN CODE: 000000</div><p class="contact-card-notice" data-i18n="contact_card_pin_notice">Public checksum — not a password.</p></div>
+              <div class="contact-card-qr-block"><div id="contactQr" class="contact-qr" role="img" aria-label="QR link to the Brave Monkey contact download page" data-i18n-aria-label="contact_card_qr_aria"></div><div class="mt-1" data-i18n="contact_card_scan">Scan to download contact</div></div>
+            </article>
+            <p class="small text-muted-strong mt-3 mb-2" data-i18n="contact_card_privacy">The QR link carries only your alias, PIN, and interface language in its URL fragment; the fragment is not sent in the page request. It includes no answers, email, or phone number. The site must be online for the download page to work. Your phone may sync saved contacts to a cloud account.</p>
+            <div id="contactCardStatus" class="small text-muted-strong mb-2" role="status" aria-live="polite" hidden></div>
+            <div id="contactCardError" class="small text-danger mb-2" role="alert" hidden></div>
+            <div class="contact-card-actions"><button id="downloadCardBtn" type="button" class="btn btn-forest" disabled data-i18n="contact_card_download_png">Download image (PNG)</button><button id="printCardBtn" type="button" class="btn btn-light-line" disabled data-i18n="contact_card_print">Print card</button><button id="downloadVCardBtn" type="button" class="btn btn-light-line" disabled data-i18n="contact_card_download_vcard">Download contact (.vcf)</button></div>
+          </section>
         </section>
       </div>
       <aside class="col-lg-4">
-        <div class="card-lite p-4 mb-4"><div class="eyebrow mb-2">How it works</div><h2 class="h5 fw-bold">Your answers become a seed</h2><p class="text-muted-strong small">A fixed set of answers is hashed locally with SHA-256. That hash selects a friendly adjective and noun. Another public formula calculates a checksum PIN from those two words, and a versioned SVG algorithm creates your icon.</p><div class="small"><span class="pill">Deterministic</span> <span class="pill">No registration</span></div></div>
-        <div class="card-lite p-4" id="validator"><div class="eyebrow mb-2">Independent checksum</div><h2 class="h5 fw-bold">Does the PIN match?</h2><p class="small text-muted-strong">Recalculate a PIN from an adjective and noun without knowing the questionnaire answers.</p>
-          <form id="verifyForm" class="d-grid gap-3"><div><label class="form-label" for="verifyAdjective">Adjective</label><input class="form-control" id="verifyAdjective" placeholder="e.g. Brave" required autocomplete="off"></div><div><label class="form-label" for="verifyNoun">Noun</label><input class="form-control" id="verifyNoun" placeholder="e.g. Monkey" required autocomplete="off"></div><div><label class="form-label" for="verifyPin">6-digit PIN</label><input class="form-control" id="verifyPin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000" required autocomplete="off"></div><button id="verifyBtn" class="btn btn-light-line" type="submit" disabled>Validate BM2 checksum</button><div id="verifyResult" class="small fw-semibold" role="status" aria-live="polite"></div></form>
+        <div class="card-lite p-4 mb-4"><div class="eyebrow mb-2" data-i18n="how_eyebrow">How it works</div><h2 class="h5 fw-bold" data-i18n="how_title">Your answers become a seed</h2><p class="text-muted-strong small" data-i18n="how_description">A fixed set of answers is normalized and hashed locally with SHA-256. The hash selects an English adjective and noun. A public formula calculates a checksum PIN from those words, and a versioned SVG algorithm creates an avatar from their initials.</p><div class="small"><span class="pill" data-i18n="how_deterministic">Deterministic</span> <span class="pill" data-i18n="how_no_registration">No registration</span></div></div>
+        <div class="card-lite p-4" id="validator"><div class="eyebrow mb-2" data-i18n="validator_eyebrow">Independent checksum</div><h2 class="h5 fw-bold" data-i18n="validator_title">Does the PIN match?</h2><p class="small text-muted-strong" data-i18n="validator_description">Recalculate a PIN from an adjective and noun without knowing the questionnaire answers.</p>
+          <form id="verifyForm" class="d-grid gap-3" novalidate><div><label class="form-label" for="verifyAdjective" data-i18n="validator_adjective">Adjective</label><input class="form-control" id="verifyAdjective" placeholder="e.g. Brave" data-i18n-placeholder="validator_adjective_placeholder" required autocomplete="off"></div><div><label class="form-label" for="verifyNoun" data-i18n="validator_noun">Noun</label><input class="form-control" id="verifyNoun" placeholder="e.g. Monkey" data-i18n-placeholder="validator_noun_placeholder" required autocomplete="off"></div><div><label class="form-label" for="verifyPin" data-i18n="validator_pin">6-digit PIN</label><input class="form-control" id="verifyPin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000" data-i18n-placeholder="validator_pin_placeholder" required autocomplete="off"></div><div id="verifyError" class="small text-danger" role="alert" hidden></div><button id="verifyBtn" class="btn btn-light-line" type="submit" disabled data-i18n="validator_button">Validate BM3 checksum</button><div id="verifyResult" class="small fw-semibold" role="status" aria-live="polite"></div></form>
         </div>
       </aside>
     </div>
-    <footer class="footer border-top mt-5 py-4 d-flex flex-wrap gap-2 justify-content-between"><span>© BraveMonkey · Prototype</span><span>All calculations happen in your browser · Not a secure login system</span></footer>
+    <footer class="footer border-top mt-5 py-4 d-flex flex-wrap gap-2 justify-content-between"><span data-i18n="footer_copyright">© Brave Monkey · Prototype</span><span data-i18n="footer_notice">All calculations happen in your browser · Not a secure login system</span></footer>
   </main>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-  <script>
-  "use strict";
-  // Preserve the frozen BM1 implementation for legacy conformance; the page UI uses BM2.
-  const VERSION = "BM1";
-  const ACTIVE_VERSION = "BM2";
-  let WORD_ADJECTIVES = Object.freeze([]);
-  let WORD_NOUNS = Object.freeze([]);
-  let wordCatalogLoaded = false;
-  const ADJECTIVES = Object.freeze(["Able","Active","Adventurous","Agile","Alert","Amber","Amused","Ancient","Angelic","Aquatic","Arctic","Artistic","Ashen","Azure","Balanced","Bashful","Beaming","Beloved","Berry","Blue","Bold","Bouncy","Brave","Breezy","Bright","Brilliant","Bronze","Bubbly","Calm","Candid","Carefree","Caring","Celestial","Cheerful","Cherry","Chipper","Clear","Clever","Cloudy","Colorful","Comfy","Content","Cozy","Creative","Curious","Dainty","Daring","Dazzling","Dear","Decent","Delightful","Dewy","Diligent","Dreamy","Dynamic","Eager","Earthy","Easygoing","Electric","Elegant","Elfish","Energetic","Even","Fair","Faithful","Fancy","Fearless","Festive","Fiery","Fine","Floral","Flowing","Fluttering","Friendly","Frosty","Gentle","Genuine","Giddy","Glad","Gleaming","Glimmering","Glowing","Golden","Graceful","Grand","Grateful","Green","Happy","Hardy","Harmonious","Helpful","Heroic","Honest","Hopeful","Humble","Icy","Imaginative","Indigo","Ingenious","Innocent","Inspired","Ivory","Jolly","Jovial","Joyful","Jubilant","Keen","Kind","Lively","Lucky","Luminous","Lunar","Magical","Majestic","Mellow","Merry","Mighty","Minty","Modest","Moonlit","Musical","Neat","Nimble","Noble","Oceanic","Olive","Openhearted","Optimistic","Orange","Organized","Patient","Peaceful","Peachy","Perky","Playful","Pleasant","Plucky","Polished","Precious","Pretty","Proud","Pure","Purple","Quick","Quiet","Radiant","Ready","Red","Relaxed","Reliable","Resilient","Resolute","Restful","Rosy","Round","Royal","Ruby","Rustic","Sage","Serene","Shiny","Silky","Silver","Simple","Sincere","Skillful","Skyblue","Sleek","Smart","Smiling","Smooth","Snappy","Snowy","Soft","Solar","Solid","Sparkling","Spirited","Sprightly","Stable","Starlit","Steady","Strong","Sunny","Superb","Swift","Talented","Tender","Thankful","Thoughtful","Thriving","Tidy","Timeless","Tranquil","Trusty","Tuneful","Twinkling","Upbeat","Uplifted","Valiant","Verdant","Vibrant","Vigorous","Violet","Warm","Welcoming","Whimsical","White","Wild","Willing","Wise","Witty","Wonderful","Youthful","Zany","Zesty","Airy","Amiable","Animated","Ardent","Aware","Blissful","Blossoming","Buoyant","Charming","Chummy","Classic","Crisp","Cushy","Dapper","Dashing","Dependable","Devoted","Dovey","Earnest","Effervescent","Enchanted","Endearing","Fairminded","Farseeing","Flourishing","Frank","Fresh","Fun","Gallant","Gemlike","Generous","Glittering","Good","Gracefulhearted","Greenish","Hearty","Inventive","Lighthearted","Lovely","Loyal"]);
-  const NOUNS = Object.freeze(["Albatross","Antelope","Badger","Bat","Bear","Beaver","Bee","Beetle","Bison","Buffalo","Butterfly","Camel","Canary","Capybara","Caribou","Cat","Cheetah","Chicken","Chinchilla","Cobra","Cougar","Coyote","Crab","Crane","Cricket","Crocodile","Crow","Deer","Dolphin","Donkey","Dove","Dragonfly","Duck","Eagle","Echidna","Elk","Falcon","Ferret","Finch","Flamingo","Fox","Frog","Gazelle","Gecko","Giraffe","Goat","Goose","Gorilla","Grasshopper","Hamster","Hare","Hawk","Hedgehog","Heron","Hippo","Horse","Hummingbird","Hyena","Iguana","Impala","Jackal","Jaguar","Jellyfish","Kangaroo","Koala","Lark","Lemur","Leopard","Lion","Llama","Lobster","Lynx","Magpie","Mantis","Marmot","Meerkat","Mole","Monkey","Moose","Moth","Mouse","Narwhal","Newt","Octopus","Okapi","Opossum","Orangutan","Orca","Otter","Owl","Ox","Panda","Panther","Parrot","Peacock","Pelican","Penguin","Pheasant","Pigeon","Platypus","Porcupine","Puffin","Puma","Quail","Rabbit","Raccoon","Ram","Raven","Reindeer","Rhino","Robin","Salamander","Salmon","Seal","Seahorse","Shark","Sheep","Shrimp","Skunk","Sloth","Snail","Sparrow","Spider","Squirrel","Starfish","Stork","Swan","Tapir","Tiger","Toad","Toucan","Trout","Turtle","Walrus","Wasp","Whale","Wolf","Wombat","Woodpecker","Yak","Zebra","Acorn","Almond","Apple","Apricot","Artichoke","Arugula","Asparagus","Avocado","Bamboo","Banana","Barley","Basil","Bean","Beet","Blackberry","Blueberry","Bokchoy","Broccoli","Cabbage","Cactus","Cantaloupe","Carrot","Cashew","Cauliflower","Celery","Cherry","Chestnut","Chickpea","Chili","Chive","Cilantro","Cinnamon","Clementine","Coconut","Corn","Cranberry","Cucumber","Currant","Daisy","Dandelion","Date","Dill","Eggplant","Elderberry","Fig","Flax","Garlic","Ginger","Grape","Grapefruit","Guava","Hazelnut","Hibiscus","Honeydew","Kale","Kiwi","Kumquat","Lavender","Leek","Lemon","Lentil","Lettuce","Lime","Lychee","Mango","Maple","Marigold","Melon","Mint","Mulberry","Mushroom","Nectarine","Nutmeg","Oat","Olive","Onion","Orange","Orchid","Papaya","Parsley","Parsnip","Peach","Peanut","Pear","Pea","Pecan","Pepper","Persimmon","Pineapple","Pistachio","Plum","Pomegranate","Poppy","Potato","Pumpkin","Quince","Radish","Raspberry","Rhubarb","Rice","Rosemary","Rutabaga","Saffron","Sage","Sesame","Shallot","Spinach","Squash","Strawberry","Sunflower","Tangerine","Tarragon","Thyme","Tomato","Turnip","Vanilla","Walnut","Watermelon","Wheat","Yam","Zucchini","Aurora","Bay","Beach","Boulder","Brook","Canyon","Cascade","Cave","Cliff","Cloud","Coast","Comet","Coral","Cosmos","Creek","Crystal","Dawn","Delta","Desert","Dew","Dune","Earth","Eclipse","Ember","Estuary","Fern","Fjord","Flame","Flint","Forest","Fossil","Galaxy","Garden","Glacier","Glen","Grove","Harbor","Horizon","Island","Isle","Lagoon","Lake","Lanternlight","Lava","Leaf","Meadow","Meteor","Mist","Moon","Moonbeam","Mountain","Oasis","Ocean","Orbit","Pebble","Peninsula","Petal","Planet","Plateau","Pond","Prairie","Quartz","Rain","Rainbow","Reef","Ridge","River","Rock","Sand","Savannah","Sea","Shadow","Shore","Skyline","Snow","Snowdrop","Spring","Star","Starlight","Stone","Stream","Summit","Sunrise","Sunset","Tide","Timber","Tundra","Valley","Vapor","Waterfall","Wave","Wetland","Wind","Woodland","Zenith","Anchor","Apron","Arrow","Atlas","Backpack","Badge","Basket","Bell","Blanket","Boat","Book","Bottle","Bowl","Bridge","Brush","Bucket","Button","Camera","Candle","Canvas","Carriage","Castle","Chair","Chalk","Chessboard","Clock","Compass","Crown","Cup","Cushion","Diamond","Drum","Easel","Envelope","Feather","Fence","Flag","Flute","Fountain","Frame","Gate","Gear","Glass","Globe","Guitar","Hammer","Hat","Helmet","Hinge","Hourglass","Ink","Jar","Jewel","Journal","Kettle","Key","Kite","Ladder","Lamp","Locket","Loom","Magnet","Marble","Mask","Medal","Mirror","Mosaic","Mug","Needle","Notebook","Oar","Paddle","Paint","Palette","Paper","Parcel","Pendant","Pen","Pencil","Piano","Pillow","Pinwheel","Pocket","Puzzle","Ribbon","Ring","Rope","Saddle","Sail","Scarf","Scroll","Shield","Ship","Sketchbook","Slipper","Spoon","Staircase","Stamp","Statue","String","Suitcase","Sundial","Telescope","Thread","Ticket","Torch","Tower","Train","Trumpet","Umbrella","Vase","Violin","Wagon","Wheel","Window","Windmill","Whistle","Yarn","Zither","Accordion","Acorncap","Airship","Alley","Alpaca","Amphora","Anemone","Antler","Arch","Archway","Armadillo","Asteroid","Avocet","Axolotl","Bagel","Balcony","Ball","Balloon","Barn","Basilisk","Beacon","Bead","Beagle","Beehive","Berry","Birch","Biscuit","Bluejay","Board","Foxglove","Freesia","Gardenia","Ginkgo","Glasshouse","Goldenrod","Grapevine"]);
-  const COLORS = Object.freeze(["RED","ORANGE","YELLOW","GREEN","BLUE","PURPLE","PINK","BLACK"]);
-  const SYMBOLS = Object.freeze(["SUN","MOON","STAR","HEART","CLOUD","FLAME","LEAF","FLOWER","MOUNTAIN","WAVE","TREE","SNOWFLAKE","COMPASS","FEATHER","DIAMOND","SHELL"]);
-  const WORD_SPACE = ADJECTIVES.length * NOUNS.length;
-  // 17 bits exactly encode 256*512 word pairs; odd multiplication is a bijection mod 2^17.
-  const ICON_PATTERN_MOD = 131072;
-  if (ADJECTIVES.length !== 256 || NOUNS.length !== 512 || WORD_SPACE !== ICON_PATTERN_MOD) throw new Error("BM1 legacy dictionaries must be 256 x 512");
-
-  const el = id => document.getElementById(id);
-  const encoder = new TextEncoder();
-  function appendOptions(id, items, withUnknown=false) {
-    const s = el(id);
-    for (const value of items) { const o = document.createElement("option"); o.value = value; o.textContent = value; s.appendChild(o); }
-    if (withUnknown) { const o=document.createElement("option");o.value="UNKNOWN";o.textContent="Unknown / not applicable";s.appendChild(o); }
-  }
-  for (let day=1;day<=31;day++) { const o=document.createElement("option");o.value=String(day).padStart(2,"0");o.textContent=String(day);el("birthdayDay").appendChild(o); }
-  for (let month=1;month<=12;month++) { const o=document.createElement("option");o.value=String(month).padStart(2,"0");o.textContent=new Date(Date.UTC(2024,month-1,1)).toLocaleString("en",{month:"long",timeZone:"UTC"});el("birthdayMonth").appendChild(o); }
-  const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  for (const id of ["surnameInitial","cityInitial","fatherInitial","motherInitial","petInitial"]) appendOptions(id,LETTERS,["fatherInitial","motherInitial","petInitial"].includes(id));
-  for (const id of ["color1","color2"]) appendOptions(id,COLORS);
-  for (const id of ["personalSymbol","icon1","icon2"]) appendOptions(id,SYMBOLS);
-  el("hadPet").addEventListener("change",()=>{const isYes=el("hadPet").value==="YES";el("petInitialGroup").hidden=!isYes;el("petInitial").required=isYes;if(!isYes)el("petInitial").value="";});
-
-  function canonicalAnswers(a) {
-    // Stable JSON array: no object-key ordering dependency, every selected option is ASCII.
-    return JSON.stringify([VERSION,a.birthdayDay,a.birthdayMonth,a.surnameInitial,a.cityInitial,a.fatherInitial,a.motherInitial,a.siblings,a.color1,a.color2,a.hadPet,a.petInitial,a.personalSymbol,a.icon1,a.icon2]);
-  }
-  async function sha256(input) { return new Uint8Array(await crypto.subtle.digest("SHA-256",encoder.encode(input))); }
-  function readU32(bytes,start=0) { return new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength).getUint32(start,false); }
-  function wordIndex(words,raw) { return words.findIndex(w=>w.toLowerCase()===String(raw).trim().toLowerCase()); }
-  function normalizeWord(word) { return String(word).trim().toLowerCase(); }
-  // PIN CHECKSUM FORMULA, portable to any language:
-  // first32bits_BE(SHA256(UTF8("bravemonkey:pin:BM1:" + lower(adjective) + ":" + lower(noun)))) % 1000000
-  async function pinFromWords(adjective,noun) {
-    const digest=await sha256("bravemonkey:pin:BM1:"+normalizeWord(adjective)+":"+normalizeWord(noun));
-    return String(readU32(digest)%1000000).padStart(6,"0");
-  }
-  async function verifyPin(adjective,noun,pin) {
-    if(wordIndex(ADJECTIVES,adjective)<0 || wordIndex(NOUNS,noun)<0 || !/^[0-9]{6}$/.test(String(pin))) return false;
-    return (await pinFromWords(adjective,noun))===String(pin);
-  }
-  async function deriveCredential(a) {
-    const digest=await sha256("bravemonkey:identity:BM1:"+canonicalAnswers(a));
-    const adjectiveIndex=readU32(digest,0)%ADJECTIVES.length;
-    const nounIndex=readU32(digest,4)%NOUNS.length;
-    const adjective=ADJECTIVES[adjectiveIndex];
-    const noun=NOUNS[nounIndex];
-    return {adjective,noun,pin:await pinFromWords(adjective,noun),adjectiveIndex,nounIndex};
-  }
-  function escapeXml(s) {return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&apos;"})[c]);}
-  // Built-in geometry uniqueness among all 131,072 BM1 word pairs:
-  // 17 fixed bit positions encode a bijectively scrambled 17-bit word-pair ID.
-  async function identiconSvg(cred) {
-    const pair=cred.adjectiveIndex*NOUNS.length + cred.nounIndex;
-    const encoded=((pair*40503)+19181)&131071;
-    const bytes=await sha256("bravemonkey:icon:BM1:"+normalizeWord(cred.adjective)+":"+normalizeWord(cred.noun));
-    const hue=bytes[0]*360/256;
-    const bg=`hsl(${Math.round(hue)} 55% 94%)`;
-    const fg=`hsl(${Math.round(hue)} 56% 31%)`;
-    const accent=`hsl(${Math.round((hue+32)%360)} 75% 68%)`;
-    const cell=29,gap=6,x0=11,y0=12;
-    const squares=[];
-    for(let row=0;row<7;row++)for(let col=0;col<4;col++){
-      const bitIndex=row*4+col;
-      const filled=bitIndex<17 ? ((encoded>>>bitIndex)&1) : (bytes[bitIndex-17]&1);
-      if(!filled)continue;
-      for(const mirrored of new Set([col,6-col])){
-        squares.push(`<rect x="${x0+mirrored*(cell+gap)}" y="${y0+row*(cell+gap)}" width="${cell}" height="${cell}" rx="7" fill="${(row+col)%6===0?accent:fg}"/>`);
-      }
-    }
-    const label=escapeXml(cred.adjective+" "+cred.noun);
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 322" role="img" aria-label="BraveMonkey identicon for ${label}"><title>${label} · BraveMonkey BM1 icon</title><desc>Seven-by-seven mirrored geometric identicon, derived from a unique word-pair index.</desc><rect width="260" height="322" rx="24" fill="${bg}"/><rect x="8" y="8" width="244" height="248" rx="18" fill="white" fill-opacity="0.64"/>${squares.join("")}<text x="130" y="285" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="750" fill="${fg}">${label}</text><text x="130" y="305" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="${fg}">BRAVEMONKEY · BM1</text></svg>`;
-  }
-
-  function canonicalAnswersBM2(a) {
-    return JSON.stringify([ACTIVE_VERSION,a.birthdayDay,a.birthdayMonth,a.surnameInitial,a.cityInitial,a.fatherInitial,a.motherInitial,a.siblings,a.color1,a.color2,a.hadPet,a.petInitial,a.personalSymbol,a.icon1,a.icon2]);
-  }
-  async function unbiasedIndex(seed,count) {
-    if(!Number.isInteger(count)||count<1||count>0x100000000) throw new Error("Invalid BM2 dictionary size");
-    const range=0x100000000,limit=Math.floor(range/count)*count;
-    for(let attempt=0;;attempt++){
-      const digest=await sha256(attempt===0?seed:`${seed}:retry:${attempt}`);
-      const value=readU32(digest);
-      if(value<limit)return value%count;
-    }
-  }
-  async function deriveCredentialBM2(a) {
-    if(!wordCatalogLoaded)throw new Error("The English word catalog is not ready");
-    const canonical=canonicalAnswersBM2(a);
-    const adjectiveIndex=await unbiasedIndex(`bravemonkey:identity:${ACTIVE_VERSION}:adjective:${canonical}`,WORD_ADJECTIVES.length);
-    const nounIndex=await unbiasedIndex(`bravemonkey:identity:${ACTIVE_VERSION}:noun:${canonical}`,WORD_NOUNS.length);
-    const adjective=WORD_ADJECTIVES[adjectiveIndex],noun=WORD_NOUNS[nounIndex];
-    return {adjective,noun,username:`${adjective} ${noun}`.toUpperCase(),pin:await pinFromWordsBM2(adjective,noun),adjectiveIndex,nounIndex,version:ACTIVE_VERSION};
-  }
-  async function pinFromWordsBM2(adjective,noun) {
-    const digest=await sha256(`bravemonkey:pin:${ACTIVE_VERSION}:${normalizeWord(adjective)}:${normalizeWord(noun)}`);
-    return String(readU32(digest)%1000000).padStart(6,"0");
-  }
-  async function verifyPinBM2(adjective,noun,pin) {
-    if(!wordCatalogLoaded||wordIndex(WORD_ADJECTIVES,adjective)<0||wordIndex(WORD_NOUNS,noun)<0||!/^[0-9]{6}$/.test(String(pin)))return false;
-    return (await pinFromWordsBM2(adjective,noun))===String(pin);
-  }
-  async function avatarSvgBM2(cred) {
-    const palette=[
-      {hex:"#155e75",name:"deep teal"},
-      {hex:"#166534",name:"forest green"},
-      {hex:"#1d4ed8",name:"blue"},
-      {hex:"#6b21a8",name:"purple"},
-      {hex:"#9f1239",name:"crimson"},
-      {hex:"#9a3412",name:"burnt orange"}
-    ];
-    const bytes=await sha256(`bravemonkey:avatar:${ACTIVE_VERSION}:${normalizeWord(cred.adjective)}:${normalizeWord(cred.noun)}`);
-    const color=palette[bytes[0]%palette.length];
-    const label=escapeXml(`${cred.adjective} ${cred.noun}`.toUpperCase());
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 260" role="img" aria-labelledby="avatar-title avatar-desc"><title id="avatar-title">${label} · BraveMonkey avatar</title><desc id="avatar-desc">White BM initials on a ${color.name} background.</desc><rect width="260" height="260" rx="36" fill="${color.hex}"/><text x="130" y="130" text-anchor="middle" dominant-baseline="central" font-family="system-ui,-apple-system,'Segoe UI',sans-serif" font-size="104" font-weight="850" letter-spacing="2" fill="#ffffff">BM</text></svg>`;
-  }
-  async function loadWordCatalog() {
-    const status=el("catalogStatus");
-    try{
-      const url=new URL("assets/words.json",document.baseURI);
-      if(url.origin!==location.origin)throw new Error("Word catalog must be same-origin");
-      const response=await fetch(url,{credentials:"same-origin",cache:"no-cache",redirect:"error"});
-      if(!response.ok)throw new Error(`Word catalog request failed (${response.status})`);
-      const catalog=await response.json();
-      const readIds=(entries,label,hasIcons=false)=>{
-        if(!Array.isArray(entries)||entries.length===0)throw new Error(`${label} list is empty or invalid`);
-        const ids=entries.map((entry,index)=>{
-          const expected=hasIcons?"icon,id":"id";
-          if(!entry||typeof entry!=="object"||Array.isArray(entry)||Object.keys(entry).sort().join(",")!==expected)throw new Error(`Invalid ${label} entry at index ${index}`);
-          if(typeof entry.id!=="string"||!/^[A-Z][A-Za-z]*$/.test(entry.id))throw new Error(`Invalid English ${label} ID at index ${index}`);
-          if(hasIcons&&entry.icon!==`/assets/icons/${entry.id.toLowerCase()}.svg`)throw new Error(`Invalid icon path for ${entry.id}`);
-          return entry.id;
-        });
-        if(new Set(ids.map(id=>id.toLowerCase())).size!==ids.length)throw new Error(`${label} IDs must be unique ignoring case`);
-        return Object.freeze(ids);
-      };
-      const adjectives=readIds(catalog.adjectives,"adjective"),nouns=readIds(catalog.nouns,"noun",true);
-      const nounIds=new Set(nouns.map(noun=>noun.toLowerCase()));
-      if(adjectives.some(word=>nounIds.has(word.toLowerCase())))throw new Error("A word cannot appear in both lists");
-      WORD_ADJECTIVES=adjectives;WORD_NOUNS=nouns;wordCatalogLoaded=true;
-      el("generateBtn").disabled=false;el("verifyBtn").disabled=false;
-      status.hidden=true;
-      return true;
-    }catch(error){
-      status.textContent="Couldn't load the English word catalog. Serve this site from localhost or HTTPS, then reload.";
-      status.classList.remove("text-muted-strong");status.classList.add("text-danger");
-      console.error("BraveMonkey BM2 catalog error",error);
-      return false;
-    }
-  }
-  const readAnswers=()=>Object.fromEntries(["birthdayDay","birthdayMonth","surnameInitial","cityInitial","fatherInitial","motherInitial","siblings","color1","color2","hadPet","petInitial","personalSymbol","icon1","icon2"].map(id=>[id,el(id).value]));
-  let latestCredential=null,latestSvg=null;
-  el("questionnaire").addEventListener("submit",async e=>{
-    e.preventDefault();
-    el("formError").hidden=true;
-    const a=readAnswers();
-    if(a.color1===a.color2){el("formError").textContent="Choose two different colors in order.";el("formError").hidden=false;return;}
-    if(a.icon1===a.icon2){el("formError").textContent="Choose two different symbols for your ordered pair.";el("formError").hidden=false;return;}
-    if(a.hadPet==="YES"&&!a.petInitial){el("formError").textContent="Select your first pet's initial, or Unknown.";el("formError").hidden=false;return;}
-    a.petInitial=a.hadPet==="NO"?"NONE":a.petInitial;
-    const button=el("generateBtn");button.disabled=true;button.textContent="Generating…";
-    try{
-      const c=await deriveCredentialBM2(a),svg=await avatarSvgBM2(c);
-      latestCredential=c;latestSvg=svg;
-      el("resultAlias").textContent=c.username;
-      el("resultPin").textContent=c.pin;
-      el("svgPreview").innerHTML=svg;
-      el("verifyAdjective").value=c.adjective.toUpperCase();el("verifyNoun").value=c.noun.toUpperCase();el("verifyPin").value=c.pin;
-      el("resultSection").hidden=false;el("actionNotice").textContent="";
-      el("resultSection").focus();el("resultSection").scrollIntoView({behavior:"smooth",block:"start"});
-    }catch(err){el("formError").textContent="Generation failed. Check the word catalog and use a secure HTTPS or localhost context.";el("formError").hidden=false;console.error("BraveMonkey generation error",err);}
-    finally{button.disabled=false;button.textContent="Generate my alias ✦";}
-  });
-  el("copyBtn").addEventListener("click",async()=>{
-    if(!latestCredential)return;
-    try{await navigator.clipboard.writeText(`${latestCredential.username} ${latestCredential.pin}`);el("actionNotice").textContent="Copied to clipboard.";}
-    catch{el("actionNotice").textContent="Clipboard unavailable. Select and copy the displayed alias and PIN manually.";}
-  });
-  el("downloadBtn").addEventListener("click",()=>{
-    if(!latestSvg||!latestCredential)return;
-    const url=URL.createObjectURL(new Blob([latestSvg],{type:"image/svg+xml;charset=utf-8"}));
-    const link=document.createElement("a");link.href=url;link.download=`bravemonkey-${latestCredential.adjective.toLowerCase()}-${latestCredential.noun.toLowerCase()}-${ACTIVE_VERSION}.svg`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),500);
-  });
-  el("verifyForm").addEventListener("submit",async e=>{
-    e.preventDefault();
-    const result=el("verifyResult");result.textContent="Checking…";
-    const adj=el("verifyAdjective").value,noun=el("verifyNoun").value,pin=el("verifyPin").value;
-    const ok=await verifyPinBM2(adj,noun,pin);
-    result.className="small fw-semibold "+(ok?"text-success":"text-danger");
-    result.textContent=ok?"✓ Matches the BM2 public checksum. This does not authenticate a person.":"✕ PIN does not match this BM2 word pair, or a word is not in the dictionary.";
-  });
-  // Helpful for downstream implementers and testing in the browser console.
-  // BM1 remains available as a legacy API; the page uses the JSON-backed BM2 catalog.
-  const wordCatalogReady=loadWordCatalog();
-  const legacyBM1=Object.freeze({VERSION,deriveCredential,pinFromWords,verifyPin,identiconSvg,canonicalAnswers,dictionarySizes:{adjectives:ADJECTIVES.length,nouns:NOUNS.length}});
-  window.BraveMonkey=Object.freeze({VERSION:ACTIVE_VERSION,ready:wordCatalogReady,deriveCredential:deriveCredentialBM2,pinFromWords:pinFromWordsBM2,verifyPin:verifyPinBM2,avatarSvg:avatarSvgBM2,canonicalAnswers:canonicalAnswersBM2,get dictionarySizes(){return {adjectives:WORD_ADJECTIVES.length,nouns:WORD_NOUNS.length};},legacyBM1});
-  </script>
+  <script src="assets/vendor/qrcodejs.min.js"></script>
+  <script type="module" src="assets/app.js"></script>
 </body>
 </html>

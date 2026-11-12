@@ -1,0 +1,416 @@
+page_title:
+  en: "Brave Monkey · Same answers, same alias"
+  de: "Brave Monkey · Gleiche Antworten, gleicher Alias"
+  es: "Brave Monkey · Mismas respuestas, mismo alias"
+page_description:
+  en: "Brave Monkey: regenerate an English adjective–noun pseudonym from memorable answers. Stateless, open and browser-only."
+  de: "Brave Monkey: Erzeuge aus einprägsamen Antworten erneut ein englisches Pseudonym aus Adjektiv und Substantiv. Ohne Konten, offen und vollständig im Browser."
+  es: "Brave Monkey: vuelve a generar un seudónimo en inglés formado por un adjetivo y un sustantivo a partir de respuestas memorables. Sin estado, abierto y solo en el navegador."
+language_label:
+  en: "Interface language"
+  de: "Sprache der Benutzeroberfläche"
+  es: "Idioma de la interfaz"
+navigation_home:
+  en: "Brave Monkey home"
+  de: "Brave Monkey Startseite"
+  es: "Inicio de Brave Monkey"
+navigation_version:
+  en: "Prototype · BM3"
+  de: "Prototyp · BM3"
+  es: "Prototipo · BM3"
+hero_eyebrow:
+  en: "One little questionnaire · One familiar alias"
+  de: "Ein kleiner Fragebogen · Ein vertrauter Alias"
+  es: "Un pequeño cuestionario · Un alias familiar"
+hero_heading_start:
+  en: "Same answers."
+  de: "Gleiche Antworten."
+  es: "Mismas respuestas."
+hero_heading_end:
+  en: "Same alias."
+  de: "Gleicher Alias."
+  es: "Mismo alias."
+hero_description:
+  en: "Create a memorable pseudonym and a matching initials avatar. Come back, answer the same questions, and regenerate it—without creating an account here."
+  de: "Erstelle ein einprägsames Pseudonym mit einem passenden Initialen-Avatar. Kehre zurück, beantworte dieselben Fragen und erzeuge es erneut – ganz ohne Konto hier."
+  es: "Crea un seudónimo fácil de recordar y un avatar con sus iniciales. Vuelve, responde las mismas preguntas y genéralo de nuevo, sin crear una cuenta aquí."
+hero_create_alias:
+  en: "Create my alias ↓"
+  de: "Meinen Alias erstellen ↓"
+  es: "Crear mi alias ↓"
+hero_check_pin:
+  en: "Check a PIN"
+  de: "PIN prüfen"
+  es: "Comprobar un PIN"
+badge_no_database:
+  en: "No generator database"
+  de: "Keine Generator-Datenbank"
+  es: "Sin base de datos del generador"
+badge_browser:
+  en: "Runs in your browser"
+  de: "Läuft in deinem Browser"
+  es: "Se ejecuta en tu navegador"
+badge_svg:
+  en: "Free SVG download"
+  de: "Kostenloser SVG-Download"
+  es: "Descarga SVG gratuita"
+sample_identity:
+  en: "A sample identity"
+  de: "Beispielidentität"
+  es: "Una identidad de ejemplo"
+sample_not_password:
+  en: "Not a password"
+  de: "Kein Passwort"
+  es: "No es una contraseña"
+questions_title:
+  en: "Your personal questions"
+  de: "Deine persönlichen Fragen"
+  es: "Tus preguntas personales"
+questions_description:
+  en: "Answer consistently each time. Enter exactly two letters in every letter field."
+  de: "Beantworte die Fragen jedes Mal gleich. Gib in jedem Buchstabenfeld genau zwei Buchstaben ein."
+  es: "Responde siempre de la misma manera. Escribe exactamente dos letras en cada campo de letras."
+question_day_label:
+  en: "Day of the month of your birthday"
+  de: "Geburtstag (Tag des Monats)"
+  es: "Día del mes de tu cumpleaños"
+question_day_placeholder:
+  en: "Select day"
+  de: "Tag auswählen"
+  es: "Selecciona el día"
+question_family_prefix:
+  en: "First two letters of your family name"
+  de: "Erste zwei Buchstaben deines Familiennamens"
+  es: "Primeras dos letras de tu apellido"
+question_father_prefix:
+  en: "First two letters of your father's first name"
+  de: "Erste zwei Buchstaben des Vornamens deines Vaters"
+  es: "Primeras dos letras del nombre de tu padre"
+question_mother_prefix:
+  en: "First two letters of your mother's first name"
+  de: "Erste zwei Buchstaben des Vornamens deiner Mutter"
+  es: "Primeras dos letras del nombre de tu madre"
+question_birthplace_prefix:
+  en: "First two letters of your place of birth"
+  de: "Erste zwei Buchstaben deines Geburtsorts"
+  es: "Primeras dos letras de tu lugar de nacimiento"
+question_letters_hint:
+  en: "Use exactly two letters. Accents and other Unicode letters are supported; do not enter spaces or punctuation."
+  de: "Verwende genau zwei Buchstaben. Akzente und andere Unicode-Buchstaben sind zulässig; keine Leerzeichen oder Satzzeichen eingeben."
+  es: "Usa exactamente dos letras. Se admiten acentos y otras letras Unicode; no escribas espacios ni signos de puntuación."
+question_siblings:
+  en: "How many siblings did you grow up with?"
+  de: "Mit wie vielen Geschwistern bist du aufgewachsen?"
+  es: "¿Con cuántos hermanos creciste?"
+question_select_answer:
+  en: "Select an answer"
+  de: "Antwort auswählen"
+  es: "Selecciona una respuesta"
+question_siblings_four_plus:
+  en: "4 or more"
+  de: "4 oder mehr"
+  es: "4 o más"
+question_had_pet:
+  en: "Have you ever had a pet?"
+  de: "Hattest du jemals ein Haustier?"
+  es: "¿Has tenido alguna mascota?"
+option_yes:
+  en: "Yes"
+  de: "Ja"
+  es: "Sí"
+option_no:
+  en: "No"
+  de: "Nein"
+  es: "No"
+question_pet_prefix:
+  en: "First two letters of your first pet's name"
+  de: "Erste zwei Buchstaben des Namens deines ersten Haustiers"
+  es: "Primeras dos letras del nombre de tu primera mascota"
+privacy_label:
+  en: "Local processing:"
+  de: "Lokale Verarbeitung:"
+  es: "Procesamiento local:"
+privacy_text:
+  en: "Your answers are used only in this browser tab to derive an alias. They are not sent to a server or saved in local storage. Your browser, hosting/CDN providers, or extensions may still process ordinary webpage metadata."
+  de: "Deine Antworten werden nur in diesem Browser-Tab verwendet, um einen Alias abzuleiten. Sie werden nicht an einen Server gesendet und nicht im lokalen Speicher abgelegt. Dein Browser, Hosting- oder CDN-Anbieter und Erweiterungen können weiterhin übliche Webseiten-Metadaten verarbeiten."
+  es: "Tus respuestas solo se usan en esta pestaña del navegador para generar un alias. No se envían a un servidor ni se guardan en el almacenamiento local. Tu navegador, los proveedores de alojamiento/CDN o las extensiones aún podrían procesar metadatos normales de la página."
+catalog_loading:
+  en: "Loading English word catalog…"
+  de: "Englischen Wortkatalog wird geladen…"
+  es: "Cargando el catálogo de palabras en inglés…"
+generate_button:
+  en: "Generate my alias ✦"
+  de: "Meinen Alias erstellen ✦"
+  es: "Generar mi alias ✦"
+generating:
+  en: "Generating…"
+  de: "Wird erstellt…"
+  es: "Generando…"
+error_fields:
+  en: "Please correct the highlighted fields."
+  de: "Bitte korrigiere die markierten Felder."
+  es: "Corrige los campos resaltados."
+error_day:
+  en: "Choose a day from 01 to 31."
+  de: "Wähle einen Tag von 01 bis 31."
+  es: "Elige un día del 01 al 31."
+error_siblings:
+  en: "Choose a sibling-count option."
+  de: "Wähle eine Option für die Anzahl deiner Geschwister."
+  es: "Selecciona una opción para el número de hermanos."
+error_pet_choice:
+  en: "Choose Yes or No."
+  de: "Wähle Ja oder Nein."
+  es: "Selecciona Sí o No."
+error_two_letters:
+  en: "Enter exactly two Unicode letters, with no spaces or punctuation."
+  de: "Gib genau zwei Unicode-Buchstaben ohne Leerzeichen oder Satzzeichen ein."
+  es: "Escribe exactamente dos letras Unicode, sin espacios ni signos de puntuación."
+error_generation:
+  en: "Generation failed. Check the word catalog and use a secure HTTPS or localhost context."
+  de: "Erstellung fehlgeschlagen. Prüfe den Wortkatalog und verwende eine sichere HTTPS- oder localhost-Verbindung."
+  es: "No se pudo generar. Comprueba el catálogo de palabras y usa HTTPS seguro o localhost."
+result_title:
+  en: "Your reproducible alias"
+  de: "Dein reproduzierbarer Alias"
+  es: "Tu alias reproducible"
+result_version_note:
+  en: "Version BM3 · This PIN is a public checksum, not a password."
+  de: "Version BM3 · Diese PIN ist eine öffentliche Prüfsumme, kein Passwort."
+  es: "Versión BM3 · Este PIN es una suma de verificación pública, no una contraseña."
+result_copy:
+  en: "Copy alias + PIN"
+  de: "Alias + PIN kopieren"
+  es: "Copiar alias + PIN"
+result_download:
+  en: "Download SVG"
+  de: "SVG herunterladen"
+  es: "Descargar SVG"
+result_warning_title:
+  en: "⚠ Identity is not authentication."
+  de: "⚠ Identität ist keine Authentifizierung."
+  es: "⚠ La identidad no es autenticación."
+result_warning_text:
+  en: "Anyone can calculate the valid PIN for a known word pair. Do not use this three-part result as a login password or proof of account ownership. A destination platform needs a separate authentication method (for example, passkeys)."
+  de: "Jede Person kann die gültige PIN zu einem bekannten Wortpaar berechnen. Verwende dieses dreiteilige Ergebnis nicht als Anmeldepasswort oder als Nachweis der Kontoinhaberschaft. Eine Zielplattform benötigt eine separate Authentifizierungsmethode, zum Beispiel Passkeys."
+  es: "Cualquiera puede calcular el PIN válido de una pareja de palabras conocida. No uses este resultado de tres partes como contraseña de acceso ni como prueba de titularidad de una cuenta. La plataforma de destino necesita un método de autenticación independiente, por ejemplo, claves de acceso."
+result_repeat_note:
+  en: "If you repeat every answer exactly, Brave Monkey will regenerate the same result. This page doesn't remember your answers after you leave."
+  de: "Wenn du alle Antworten exakt wiederholst, erzeugt Brave Monkey dasselbe Ergebnis. Diese Seite merkt sich deine Antworten nicht, nachdem du sie verlassen hast."
+  es: "Si repites exactamente todas las respuestas, Brave Monkey generará el mismo resultado. Esta página no recuerda tus respuestas cuando te vas."
+action_copied:
+  en: "Copied to clipboard."
+  de: "In die Zwischenablage kopiert."
+  es: "Copiado al portapapeles."
+action_clipboard_error:
+  en: "Clipboard unavailable. Select and copy the displayed alias and PIN manually."
+  de: "Zwischenablage nicht verfügbar. Markiere den angezeigten Alias und die PIN und kopiere sie manuell."
+  es: "El portapapeles no está disponible. Selecciona y copia manualmente el alias y el PIN mostrados."
+how_eyebrow:
+  en: "How it works"
+  de: "So funktioniert es"
+  es: "Cómo funciona"
+how_title:
+  en: "Your answers become a seed"
+  de: "Deine Antworten werden zu einem Seed"
+  es: "Tus respuestas se convierten en una semilla"
+how_description:
+  en: "A fixed set of answers is normalized and hashed locally with SHA-256. The hash selects an English adjective and noun. A public formula calculates a checksum PIN from those words, and a versioned SVG algorithm creates an avatar from their initials."
+  de: "Eine feste Menge von Antworten wird normalisiert und lokal mit SHA-256 gehasht. Der Hash wählt ein englisches Adjektiv und Substantiv aus. Eine öffentliche Formel berechnet aus diesen Wörtern eine PIN-Prüfsumme, und ein versionierter SVG-Algorithmus erstellt einen Avatar aus ihren Initialen."
+  es: "Un conjunto fijo de respuestas se normaliza y procesa localmente con SHA-256. El hash selecciona un adjetivo y un sustantivo en inglés. Una fórmula pública calcula un PIN de verificación a partir de esas palabras y un algoritmo SVG versionado crea un avatar con sus iniciales."
+how_deterministic:
+  en: "Deterministic"
+  de: "Deterministisch"
+  es: "Determinista"
+how_no_registration:
+  en: "No registration"
+  de: "Keine Registrierung"
+  es: "Sin registro"
+validator_eyebrow:
+  en: "Independent checksum"
+  de: "Unabhängige Prüfsumme"
+  es: "Verificación independiente"
+validator_title:
+  en: "Does the PIN match?"
+  de: "Stimmt die PIN?"
+  es: "¿Coincide el PIN?"
+validator_description:
+  en: "Recalculate a PIN from an adjective and noun without knowing the questionnaire answers."
+  de: "Berechne eine PIN aus Adjektiv und Substantiv neu, ohne die Antworten auf den Fragebogen zu kennen."
+  es: "Vuelve a calcular un PIN a partir de un adjetivo y un sustantivo sin conocer las respuestas al cuestionario."
+validator_adjective:
+  en: "Adjective"
+  de: "Adjektiv"
+  es: "Adjetivo"
+validator_adjective_placeholder:
+  en: "e.g. Brave"
+  de: "z. B. Brave"
+  es: "p. ej., Brave"
+validator_noun:
+  en: "Noun"
+  de: "Substantiv"
+  es: "Sustantivo"
+validator_noun_placeholder:
+  en: "e.g. Monkey"
+  de: "z. B. Monkey"
+  es: "p. ej., Monkey"
+validator_pin:
+  en: "6-digit PIN"
+  de: "6-stellige PIN"
+  es: "PIN de 6 dígitos"
+validator_pin_placeholder:
+  en: "000000"
+  de: "000000"
+  es: "000000"
+validator_input_error:
+  en: "Enter an adjective, a noun, and a six-digit PIN."
+  de: "Gib ein Adjektiv, ein Substantiv und eine sechsstellige PIN ein."
+  es: "Escribe un adjetivo, un sustantivo y un PIN de seis dígitos."
+validator_button:
+  en: "Validate BM3 checksum"
+  de: "BM3-Prüfsumme prüfen"
+  es: "Validar suma de verificación BM3"
+validator_checking:
+  en: "Checking…"
+  de: "Wird geprüft…"
+  es: "Comprobando…"
+validator_matches:
+  en: "✓ Matches the BM3 public checksum. This does not authenticate a person."
+  de: "✓ Stimmt mit der öffentlichen BM3-Prüfsumme überein. Dies authentifiziert keine Person."
+  es: "✓ Coincide con la suma de verificación pública de BM3. Esto no autentica a ninguna persona."
+validator_no_match:
+  en: "✕ PIN does not match this BM3 word pair, or a word is not in the dictionary."
+  de: "✕ Die PIN stimmt nicht mit diesem BM3-Wortpaar überein oder ein Wort ist nicht im Wörterbuch."
+  es: "✕ El PIN no coincide con esta pareja de palabras BM3 o una palabra no está en el diccionario."
+validator_failure:
+  en: "Couldn't check the PIN. Use a secure HTTPS or localhost context."
+  de: "Die PIN konnte nicht geprüft werden. Verwende eine sichere HTTPS- oder localhost-Verbindung."
+  es: "No se pudo comprobar el PIN. Usa una conexión segura HTTPS o localhost."
+footer_copyright:
+  en: "© Brave Monkey · Prototype"
+  de: "© Brave Monkey · Prototyp"
+  es: "© Brave Monkey · Prototipo"
+footer_notice:
+  en: "All calculations happen in your browser · Not a secure login system"
+  de: "Alle Berechnungen erfolgen in deinem Browser · Kein sicheres Anmeldesystem"
+  es: "Todos los cálculos se realizan en tu navegador · No es un sistema de acceso seguro"
+catalog_error:
+  en: "Couldn't load the English word catalog. Serve this site from localhost or HTTPS, then reload."
+  de: "Der englische Wortkatalog konnte nicht geladen werden. Stelle die Seite über localhost oder HTTPS bereit und lade sie erneut."
+  es: "No se pudo cargar el catálogo de palabras en inglés. Sirve el sitio desde localhost o HTTPS y vuelve a cargarlo."
+avatar_title:
+  en: "{pair} · Brave Monkey avatar"
+  de: "{pair} · Avatar von Brave Monkey"
+  es: "{pair} · Avatar de Brave Monkey"
+avatar_description:
+  en: "Initials {initials} from {pair} on a patterned pastel background."
+  de: "Die Initialen {initials} aus {pair} auf einem pastellfarbenen Hintergrund mit Muster."
+  es: "Iniciales {initials} de {pair} sobre un fondo pastel con un patrón."
+contact_card_title:
+  en: "Save your identity"
+  de: "Speichere deine Identität"
+  es: "Guarda tu identidad"
+contact_card_description:
+  en: "Download or print this card. The QR opens a contact-download page; generate final cards from the hosted site so phones can reach it."
+  de: "Lade diese Karte herunter oder drucke sie. Der QR-Code öffnet eine Downloadseite für den Kontakt. Erstelle endgültige Karten auf der gehosteten Website, damit Telefone die Seite erreichen können."
+  es: "Descarga o imprime esta tarjeta. El QR abre una página para descargar el contacto; genera las tarjetas finales desde el sitio publicado para que los teléfonos puedan abrirla."
+contact_card_aria:
+  en: "Brave Monkey BM3 identity contact card"
+  de: "Brave Monkey BM3-Identitätskontaktkarte"
+  es: "Tarjeta de contacto de identidad Brave Monkey BM3"
+contact_card_edition:
+  en: "BM3 identity card"
+  de: "BM3-Identitätskarte"
+  es: "Tarjeta de identidad BM3"
+contact_card_pin_notice:
+  en: "Public checksum — not a password."
+  de: "Öffentliche Prüfsumme — kein Passwort."
+  es: "Suma de verificación pública — no es una contraseña."
+contact_card_qr_aria:
+  en: "QR link to the Brave Monkey contact download page"
+  de: "QR-Code-Link zur Downloadseite des Brave-Monkey-Kontakts"
+  es: "Enlace QR a la página de descarga del contacto de Brave Monkey"
+contact_card_scan:
+  en: "Scan to download contact"
+  de: "Scannen, um den Kontakt herunterzuladen"
+  es: "Escanea para descargar el contacto"
+contact_card_privacy:
+  en: "The QR link carries only your alias, PIN, and interface language in its URL fragment; the fragment is not sent in the page request. It includes no answers, email, or phone number. The site must be online for the download page to work. Your phone may sync saved contacts to a cloud account."
+  de: "Der QR-Code enthält nur deinen Alias, deine PIN und die Oberflächensprache im URL-Fragment; dieses Fragment wird nicht mit der Seitenanfrage gesendet. Er enthält keine Antworten, E-Mail-Adresse oder Telefonnummer. Die Website muss online sein, damit die Downloadseite funktioniert. Dein Telefon kann gespeicherte Kontakte mit einem Cloud-Konto synchronisieren."
+  es: "El enlace QR solo lleva tu alias, PIN e idioma de la interfaz en el fragmento de la URL; ese fragmento no se envía con la solicitud de la página. No incluye respuestas, correo electrónico ni teléfono. El sitio debe estar en línea para que funcione la descarga. Tu teléfono podría sincronizar los contactos guardados con la nube."
+contact_card_download_png:
+  en: "Download image (PNG)"
+  de: "Bild herunterladen (PNG)"
+  es: "Descargar imagen (PNG)"
+contact_card_print:
+  en: "Print card"
+  de: "Karte drucken"
+  es: "Imprimir tarjeta"
+contact_card_download_vcard:
+  en: "Download contact (.vcf)"
+  de: "Kontakt herunterladen (.vcf)"
+  es: "Descargar contacto (.vcf)"
+contact_card_ready:
+  en: "Contact link is ready. Scan to open the download page, then download and open the .vcf file."
+  de: "Der Kontaktlink ist bereit. Scanne ihn, um die Downloadseite zu öffnen, und lade dann die .vcf-Datei herunter und öffne sie."
+  es: "El enlace del contacto está listo. Escanéalo para abrir la página de descarga; después descarga y abre el archivo .vcf."
+contact_card_png_working:
+  en: "Preparing your card image…"
+  de: "Dein Kartenbild wird vorbereitet…"
+  es: "Preparando la imagen de tu tarjeta…"
+contact_card_png_done:
+  en: "PNG identity card downloaded."
+  de: "BM3-Identitätskarte als PNG heruntergeladen."
+  es: "Tarjeta de identidad PNG descargada."
+contact_card_png_error:
+  en: "Could not create the PNG card. Try again or use Print."
+  de: "Die PNG-Karte konnte nicht erstellt werden. Versuche es erneut oder nutze Drucken."
+  es: "No se pudo crear la tarjeta PNG. Inténtalo de nuevo o usa Imprimir."
+contact_card_vcard_done:
+  en: "Contact file downloaded. Open the .vcf file to add it to your contacts."
+  de: "Kontaktdatei heruntergeladen. Öffne die .vcf-Datei, um den Kontakt hinzuzufügen."
+  es: "Archivo de contacto descargado. Abre el archivo .vcf para añadirlo a tus contactos."
+contact_card_vcard_error:
+  en: "Could not create the contact file."
+  de: "Die Kontaktdatei konnte nicht erstellt werden."
+  es: "No se pudo crear el archivo de contacto."
+contact_card_qr_error:
+  en: "The contact QR could not be generated. You can still download the .vcf contact file or reload and try again."
+  de: "Der Kontakt-QR-Code konnte nicht erstellt werden. Du kannst weiterhin die .vcf-Kontaktdatei herunterladen oder die Seite neu laden."
+  es: "No se pudo generar el QR del contacto. Aún puedes descargar el archivo de contacto .vcf o recargar la página."
+contact_import_page_title:
+  en: "Brave Monkey · Add this contact"
+  de: "Brave Monkey · Diesen Kontakt hinzufügen"
+  es: "Brave Monkey · Añadir este contacto"
+contact_import_meta_description:
+  en: "Download a Brave Monkey contact with its PIN note."
+  de: "Lade einen Brave-Monkey-Kontakt mit PIN-Notiz herunter."
+  es: "Descarga un contacto de Brave Monkey con la nota del PIN."
+contact_import_title:
+  en: "Save this contact"
+  de: "Diesen Kontakt speichern"
+  es: "Guardar este contacto"
+contact_import_description:
+  en: "Download the contact file, then open it to add the alias and PIN to your phone's contacts."
+  de: "Lade die Kontaktdatei herunter und öffne sie, um Alias und PIN zu deinen Telefonkontakten hinzuzufügen."
+  es: "Descarga el archivo de contacto y ábrelo para añadir el alias y el PIN a los contactos del teléfono."
+contact_import_company:
+  en: "Company: Brave Monkey"
+  de: "Unternehmen: Brave Monkey"
+  es: "Empresa: Brave Monkey"
+contact_import_instructions:
+  en: "After downloading, open the .vcf file and choose Add to Contacts. The Note contains the PIN."
+  de: "Öffne nach dem Herunterladen die .vcf-Datei und wähle Zu Kontakten hinzufügen. Die Notiz enthält die PIN."
+  es: "Después de descargarlo, abre el archivo .vcf y selecciona Añadir a contactos. La nota contiene el PIN."
+contact_import_privacy:
+  en: "The contact contains only your alias, Brave Monkey as the company, and PIN—no answers, email, or phone number. Your phone may sync saved contacts to a cloud account."
+  de: "Der Kontakt enthält nur deinen Alias, Brave Monkey als Unternehmen und die PIN – keine Antworten, E-Mail-Adresse oder Telefonnummer. Dein Telefon kann gespeicherte Kontakte mit einem Cloud-Konto synchronisieren."
+  es: "El contacto solo contiene tu alias, Brave Monkey como empresa y el PIN; no incluye respuestas, correo electrónico ni teléfono. Tu teléfono podría sincronizar los contactos guardados con la nube."
+contact_import_error:
+  en: "This contact link is incomplete or invalid. Scan the QR code again from the card."
+  de: "Dieser Kontaktlink ist unvollständig oder ungültig. Scanne den QR-Code auf der Karte erneut."
+  es: "Este enlace de contacto está incompleto o no es válido. Vuelve a escanear el QR de la tarjeta."
+contact_import_home:
+  en: "Return to Brave Monkey"
+  de: "Zurück zu Brave Monkey"
+  es: "Volver a Brave Monkey"
